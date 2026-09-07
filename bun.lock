@@ -16,6 +16,7 @@
         "express-rate-limit": "^8.7.0",
         "helmet": "^8.3.0",
         "hpp-clean": "^1.0.4",
+        "http-status": "^2.1.0",
         "jsonwebtoken": "^9.0.3",
         "mongoose": "^9.9.5",
         "morgan": "^1.12.0",
@@ -441,6 +442,8 @@
     "hpp-clean": ["hpp-clean@1.0.4", "", {}, "sha512-laE9Z/Zp1wbcHD4wns1VtCa9s2Oy2ocwtXdpSuT+xDqFI8hZGYwC9dnzJyPdQN75hGm+zVT9ghUQORTnraAXDA=="],
 
     "http-errors": ["http-errors@2.0.1", "", { "dependencies": { "depd": "~2.0.0", "inherits": "~2.0.4", "setprototypeof": "~1.2.0", "statuses": "~2.0.2", "toidentifier": "~1.0.1" } }, "sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ=="],
+
+    "http-status": ["http-status@2.1.0", "", {}, "sha512-O5kPr7AW7wYd/BBiOezTwnVAnmSNFY+J7hlZD2X5IOxVBetjcHAiTXhzj0gMrnojQlwy+UT1/Y3H3vJ3UlmvLA=="],
 
     "https-proxy-agent": ["https-proxy-agent@7.0.6", "", { "dependencies": { "agent-base": "^7.1.2", "debug": "4" } }, "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw=="],
 
