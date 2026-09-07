@@ -1,606 +1,592 @@
 {
-    "App File Header": {
-        "prefix": "appheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🚀 App — Application setup and configuration",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Application setup file header"
-    },
-    "Server File Header": {
-        "prefix": "serverheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🌐 Server — HTTP server bootstrap",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "HTTP server bootstrap file header"
-    },
-    "Config File Header": {
-        "prefix": "configheader",
-        "body": [
-            "//! ============================================================",
-            "//! ⚙️ ${1:Config} — ${2:Application configuration}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Configuration file header"
-    },
-    "Constants File Header": {
-        "prefix": "constantsheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔖 ${1:Constants} — ${2:Application constants}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Constants file header"
-    },
-    "Database File Header": {
-        "prefix": "databaseheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🗄️ ${1:Database} — ${2:Database connection and configuration}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Database connection and configuration file header"
-    },
-    "Error File Header": {
-        "prefix": "errorheader",
-        "body": [
-            "//! ============================================================",
-            "//! ❌ ${1:AppError} — ${2:Application error definition}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Application error file header"
-    },
-    "Middleware File Header": {
-        "prefix": "middlewareheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🛡️ ${1:Middleware} — ${2:Request processing middleware}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Request processing middleware file header"
-    },
-    "Model File Header": {
-        "prefix": "modelheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🧱 ${1:Model} — ${2:Data model definition}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Data model file header"
-    },
-    "Repository File Header": {
-        "prefix": "repositoryheader",
-        "body": [
-            "//! ============================================================",
-            "//! 💾 ${1:Repository} — ${2:Data access layer}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Data access repository file header"
-    },
-    "Route File Header": {
-        "prefix": "routeheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🛣️ ${1:Routes} — ${2:API route definitions}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "API route definitions file header"
-    },
-    "Controller File Header": {
-        "prefix": "controllerheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🎮 ${1:Controller} — ${2:HTTP request handlers}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "HTTP controller file header"
-    },
-    "Service File Header": {
-        "prefix": "serviceheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔧 ${1:Service} — ${2:Business logic}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Business logic service file header"
-    },
-    "Type File Header": {
-        "prefix": "typeheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📝 ${1:Types} — ${2:Type definitions}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Type definitions file header"
-    },
-    "Utility File Header": {
-        "prefix": "utilheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔨 ${1:Utility} — ${2:Reusable utility functions}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Reusable utility functions file header"
-    },
-    "Schema File Header": {
-        "prefix": "schemaheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📐 ${1:Schema} — ${2:Data validation schema}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Data validation schema file header"
-    },
-    "DTO File Header": {
-        "prefix": "dtoheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📦 ${1:DTO} — ${2:Data transfer object}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Data transfer object file header"
-    },
-    "Validator File Header": {
-        "prefix": "validatorheader",
-        "body": [
-            "//! ============================================================",
-            "//! ✅ ${1:Validator} — ${2:Input validation logic}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Input validation file header"
-    },
-    "Guard File Header": {
-        "prefix": "guardheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🚧 ${1:Guard} — ${2:Access control and protection}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Access control guard file header"
-    },
-    "Policy File Header": {
-        "prefix": "policyheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📜 ${1:Policy} — ${2:Authorization policy}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Authorization policy file header"
-    },
-    "Permission File Header": {
-        "prefix": "permissionheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔑 ${1:Permission} — ${2:Permission definitions}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Permission definitions file header"
-    },
-    "Factory File Header": {
-        "prefix": "factoryheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🏭 ${1:Factory} — ${2:Object creation logic}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Factory file header"
-    },
-    "Provider File Header": {
-        "prefix": "providerheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔌 ${1:Provider} — ${2:External service provider}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "External service provider file header"
-    },
-    "Adapter File Header": {
-        "prefix": "adapterheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔄 ${1:Adapter} — ${2:External interface adapter}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "External interface adapter file header"
-    },
-    "Integration File Header": {
-        "prefix": "integrationheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔗 ${1:Integration} — ${2:External service integration}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "External service integration file header"
-    },
-    "Event File Header": {
-        "prefix": "eventheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📣 ${1:Event} — ${2:Application event definition}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Application event file header"
-    },
-    "Listener File Header": {
-        "prefix": "listenerheader",
-        "body": [
-            "//! ============================================================",
-            "//! 👂 ${1:Listener} — ${2:Event listener}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Event listener file header"
-    },
-    "Job File Header": {
-        "prefix": "jobheader",
-        "body": [
-            "//! ============================================================",
-            "//! ⏱️ ${1:Job} — ${2:Background job}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Background job file header"
-    },
-    "Queue File Header": {
-        "prefix": "queueheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📬 ${1:Queue} — ${2:Background job queue}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Background job queue file header"
-    },
-    "Worker File Header": {
-        "prefix": "workerheader",
-        "body": [
-            "//! ============================================================",
-            "//! 👷 ${1:Worker} — ${2:Background worker}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Background worker file header"
-    },
-    "Strategy File Header": {
-        "prefix": "strategyheader",
-        "body": [
-            "//! ============================================================",
-            "//! ♟️ ${1:Strategy} — ${2:Strategy implementation}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Strategy implementation file header"
-    },
-    "Mapper File Header": {
-        "prefix": "mapperheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🗺️ ${1:Mapper} — ${2:Data transformation and mapping}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Data mapper file header"
-    },
-    "Serializer File Header": {
-        "prefix": "serializerheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔤 ${1:Serializer} — ${2:Data serialization}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Data serializer file header"
-    },
-    "Cache File Header": {
-        "prefix": "cacheheader",
-        "body": [
-            "//! ============================================================",
-            "//! ⚡ ${1:Cache} — ${2:Caching logic}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Caching logic file header"
-    },
-    "Security File Header": {
-        "prefix": "securityheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔐 ${1:Security} — ${2:Security-related logic}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Security-related file header"
-    },
-    "Logger File Header": {
-        "prefix": "loggerheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📋 ${1:Logger} — ${2:Application logging}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Application logger file header"
-    },
-    "Test File Header": {
-        "prefix": "testheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🧪 ${1:Test} — ${2:Test suite}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Test suite file header"
-    },
-    "Mock File Header": {
-        "prefix": "mockheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🎭 ${1:Mock} — ${2:Test mock}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Test mock file header"
-    },
-    "Seed File Header": {
-        "prefix": "seedheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🌱 ${1:Seed} — ${2:Database seed data}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Database seed file header"
-    },
-    "Migration File Header": {
-        "prefix": "migrationheader",
-        "body": [
-            "//! ============================================================",
-            "//! 🔄 ${1:Migration} — ${2:Database migration}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Database migration file header"
-    },
-    "Documentation File Header": {
-        "prefix": "docsheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📚 ${1:Documentation} — ${2:Documentation and references}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Documentation file header"
-    },
-    "Generic TypeScript File Header": {
-        "prefix": "fileheader",
-        "body": [
-            "//! ============================================================",
-            "//! 📦 ${1:FileName} — ${2:Description}",
-            "//! ============================================================",
-            "",
-            "$0"
-        ],
-        "description": "Standard project file header"
-    },
-    "Section Header": {
-        "prefix": "sectionheader",
-        "body": [
-            "//-- ------------------------------------------------------",
-            "//--  ${1:Section Name} : ${2:Description}",
-            "//-- ------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard section header"
-    },
-    "Subsection Header": {
-        "prefix": "subsectionheader",
-        "body": [
-            "//-- ------------------------------------------------------",
-            "//--  ${1:Subsection Name}",
-            "//-- ------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard subsection header"
-    },
-    "Function Header": {
-        "prefix": "fnheader",
-        "body": [
-            "//> -----------------------------------------------------------------",
-            "//> Fn:${1:functionName}() — Desc: ${2:Description}",
-            "//> -----------------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard function documentation header"
-    },
-    "Object Header": {
-        "prefix": "objheader",
-        "body": [
-            "//@ -----------------------------------------------------------------",
-            "//@ Obj:${1:objectName} — Desc: ${2:Description}",
-            "//@ -----------------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard object documentation header"
-    },
-    "Class Header": {
-        "prefix": "classheader",
-        "body": [
-            "//@ -----------------------------------------------------------------",
-            "//@ Class:${1:ClassName} — Desc: ${2:Description}",
-            "//@ -----------------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard class documentation header"
-    },
-    "Interface Header": {
-        "prefix": "interfaceheader",
-        "body": [
-            "//@ -----------------------------------------------------------------",
-            "//@ Interface:${1:InterfaceName} — Desc: ${2:Description}",
-            "//@ -----------------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard interface documentation header"
-    },
-    "Type Header": {
-        "prefix": "typeheader",
-        "body": [
-            "//@ -----------------------------------------------------------------",
-            "//@ Type:${1:TypeName} — Desc: ${2:Description}",
-            "//@ -----------------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard type documentation header"
-    },
-    "Constant Header": {
-        "prefix": "constheader",
-        "body": [
-            "//@ -----------------------------------------------------------------",
-            "//@ Const:${1:CONSTANT_NAME} — Desc: ${2:Description}",
-            "//@ -----------------------------------------------------------------",
-            "$0"
-        ],
-        "description": "Insert a standard constant documentation header"
-    },
-    "API Route Documentation": {
-        "prefix": "apidoc",
-        "body": [
-            "// @desc ${1:Description}",
-            "// @route ${2:GET} ${3:/}",
-            "// @access ${4:Public}",
-            "",
-            "$0"
-        ],
-        "description": "Insert API route documentation comments"
-    },
-    "TODO Comment": {
-        "prefix": "todo",
-        "body": [
-            "// Todo: ${1:Description}"
-        ],
-        "description": "Insert a TODO comment"
-    },
-    "FIXME Comment": {
-        "prefix": "fixme",
-        "body": [
-            "// FIXME: ${1:Description}"
-        ],
-        "description": "Insert a FIXME comment"
-    },
-    "ERROR Comment": {
-        "prefix": "error",
-        "body": [
-            "// ERROR: ${1:Description}"
-        ],
-        "description": "Insert an ERROR comment"
-    },
-    "NOTE Comment": {
-        "prefix": "note",
-        "body": [
-            "// NOTE: ${1:Description}"
-        ],
-        "description": "Insert a NOTE comment"
-    },
-    "WARNING Comment": {
-        "prefix": "warning",
-        "body": [
-            "// WARNING: ${1:Description}"
-        ],
-        "description": "Insert a warning comment"
-    },
-    "Inline Comment": {
-        "prefix": "inline",
-        "body": [
-            "// ${1:Description}"
-        ],
-        "description": "Insert a simple inline comment"
-    },
-    "Block Comment": {
-        "prefix": "blockcomment",
-        "body": [
-            "/*",
-            " * ${1:Explanation}",
-            " *",
-            " * ${2:Additional details}",
-            " */",
-            "",
-            "$0"
-        ],
-        "description": "Insert a multiline block comment"
-    },
-    "Information Comment": {
-        "prefix": "inf",
-        "body": [
-            "// Info: ${1:Info}"
-        ],
-        "description": "Insert an information comment"
-    }
+	"App File Header": {
+		"prefix": "appheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🚀 App — Application setup and configuration",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Application setup file header"
+	},
+	"Server File Header": {
+		"prefix": "serverheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🌐 Server — HTTP server bootstrap",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "HTTP server bootstrap file header"
+	},
+	"Config File Header": {
+		"prefix": "configheader",
+		"body": [
+			"//! ============================================================",
+			"//! ⚙️ ${1:Config} — ${2:Application configuration}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Configuration file header"
+	},
+	"Constants File Header": {
+		"prefix": "constantsheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔖 ${1:Constants} — ${2:Application constants}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Constants file header"
+	},
+	"Database File Header": {
+		"prefix": "databaseheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🗄️ ${1:Database} — ${2:Database connection and configuration}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Database connection and configuration file header"
+	},
+	"Error File Header": {
+		"prefix": "errorheader",
+		"body": [
+			"//! ============================================================",
+			"//! ❌ ${1:AppError} — ${2:Application error definition}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Application error file header"
+	},
+	"Middleware File Header": {
+		"prefix": "middlewareheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🛡️ ${1:Middleware} — ${2:Request processing middleware}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Request processing middleware file header"
+	},
+	"Model File Header": {
+		"prefix": "modelheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🧱 ${1:Model} — ${2:Data model definition}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Data model file header"
+	},
+	"Repository File Header": {
+		"prefix": "repositoryheader",
+		"body": [
+			"//! ============================================================",
+			"//! 💾 ${1:Repository} — ${2:Data access layer}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Data access repository file header"
+	},
+	"Route File Header": {
+		"prefix": "routeheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🛣️ ${1:Routes} — ${2:API route definitions}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "API route definitions file header"
+	},
+	"Controller File Header": {
+		"prefix": "controllerheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🎮 ${1:Controller} — ${2:HTTP request handlers}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "HTTP controller file header"
+	},
+	"Service File Header": {
+		"prefix": "serviceheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔧 ${1:Service} — ${2:Business logic}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Business logic service file header"
+	},
+	"Type File Header": {
+		"prefix": "typeheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📝 ${1:Types} — ${2:Type definitions}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Type definitions file header"
+	},
+	"Utility File Header": {
+		"prefix": "utilheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔨 ${1:Utility} — ${2:Reusable utility functions}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Reusable utility functions file header"
+	},
+	"Schema File Header": {
+		"prefix": "schemaheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📐 ${1:Schema} — ${2:Data validation schema}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Data validation schema file header"
+	},
+	"DTO File Header": {
+		"prefix": "dtoheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📦 ${1:DTO} — ${2:Data transfer object}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Data transfer object file header"
+	},
+	"Validator File Header": {
+		"prefix": "validatorheader",
+		"body": [
+			"//! ============================================================",
+			"//! ✅ ${1:Validator} — ${2:Input validation logic}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Input validation file header"
+	},
+	"Guard File Header": {
+		"prefix": "guardheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🚧 ${1:Guard} — ${2:Access control and protection}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Access control guard file header"
+	},
+	"Policy File Header": {
+		"prefix": "policyheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📜 ${1:Policy} — ${2:Authorization policy}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Authorization policy file header"
+	},
+	"Permission File Header": {
+		"prefix": "permissionheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔑 ${1:Permission} — ${2:Permission definitions}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Permission definitions file header"
+	},
+	"Factory File Header": {
+		"prefix": "factoryheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🏭 ${1:Factory} — ${2:Object creation logic}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Factory file header"
+	},
+	"Provider File Header": {
+		"prefix": "providerheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔌 ${1:Provider} — ${2:External service provider}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "External service provider file header"
+	},
+	"Adapter File Header": {
+		"prefix": "adapterheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔄 ${1:Adapter} — ${2:External interface adapter}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "External interface adapter file header"
+	},
+	"Integration File Header": {
+		"prefix": "integrationheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔗 ${1:Integration} — ${2:External service integration}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "External service integration file header"
+	},
+	"Event File Header": {
+		"prefix": "eventheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📣 ${1:Event} — ${2:Application event definition}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Application event file header"
+	},
+	"Listener File Header": {
+		"prefix": "listenerheader",
+		"body": [
+			"//! ============================================================",
+			"//! 👂 ${1:Listener} — ${2:Event listener}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Event listener file header"
+	},
+	"Job File Header": {
+		"prefix": "jobheader",
+		"body": [
+			"//! ============================================================",
+			"//! ⏱️ ${1:Job} — ${2:Background job}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Background job file header"
+	},
+	"Queue File Header": {
+		"prefix": "queueheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📬 ${1:Queue} — ${2:Background job queue}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Background job queue file header"
+	},
+	"Worker File Header": {
+		"prefix": "workerheader",
+		"body": [
+			"//! ============================================================",
+			"//! 👷 ${1:Worker} — ${2:Background worker}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Background worker file header"
+	},
+	"Strategy File Header": {
+		"prefix": "strategyheader",
+		"body": [
+			"//! ============================================================",
+			"//! ♟️ ${1:Strategy} — ${2:Strategy implementation}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Strategy implementation file header"
+	},
+	"Mapper File Header": {
+		"prefix": "mapperheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🗺️ ${1:Mapper} — ${2:Data transformation and mapping}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Data mapper file header"
+	},
+	"Serializer File Header": {
+		"prefix": "serializerheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔤 ${1:Serializer} — ${2:Data serialization}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Data serializer file header"
+	},
+	"Cache File Header": {
+		"prefix": "cacheheader",
+		"body": [
+			"//! ============================================================",
+			"//! ⚡ ${1:Cache} — ${2:Caching logic}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Caching logic file header"
+	},
+	"Security File Header": {
+		"prefix": "securityheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔐 ${1:Security} — ${2:Security-related logic}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Security-related file header"
+	},
+	"Logger File Header": {
+		"prefix": "loggerheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📋 ${1:Logger} — ${2:Application logging}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Application logger file header"
+	},
+	"Test File Header": {
+		"prefix": "testheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🧪 ${1:Test} — ${2:Test suite}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Test suite file header"
+	},
+	"Mock File Header": {
+		"prefix": "mockheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🎭 ${1:Mock} — ${2:Test mock}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Test mock file header"
+	},
+	"Seed File Header": {
+		"prefix": "seedheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🌱 ${1:Seed} — ${2:Database seed data}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Database seed file header"
+	},
+	"Migration File Header": {
+		"prefix": "migrationheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔄 ${1:Migration} — ${2:Database migration}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Database migration file header"
+	},
+	"Documentation File Header": {
+		"prefix": "docsheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📚 ${1:Documentation} — ${2:Documentation and references}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Documentation file header"
+	},
+	"Generic TypeScript File Header": {
+		"prefix": "fileheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📦 ${1:FileName} — ${2:Description}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Standard project file header"
+	},
+	"Section Header": {
+		"prefix": "sectionheader",
+		"body": [
+			"//-- ------------------------------------------------------",
+			"//--  ${1:Section Name} : ${2:Description}",
+			"//-- ------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard section header"
+	},
+	"Subsection Header": {
+		"prefix": "subsectionheader",
+		"body": [
+			"//-- ------------------------------------------------------",
+			"//--  ${1:Subsection Name}",
+			"//-- ------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard subsection header"
+	},
+	"Function Header": {
+		"prefix": "fnheader",
+		"body": [
+			"//> -----------------------------------------------------------------",
+			"//> Fn:${1:functionName}() — Desc: ${2:Description}",
+			"//> -----------------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard function documentation header"
+	},
+	"Object Header": {
+		"prefix": "objheader",
+		"body": [
+			"//@ -----------------------------------------------------------------",
+			"//@ Obj:${1:objectName} — Desc: ${2:Description}",
+			"//@ -----------------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard object documentation header"
+	},
+	"Class Header": {
+		"prefix": "classheader",
+		"body": [
+			"//@ -----------------------------------------------------------------",
+			"//@ Class:${1:ClassName} — Desc: ${2:Description}",
+			"//@ -----------------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard class documentation header"
+	},
+	"Interface Header": {
+		"prefix": "interfaceheader",
+		"body": [
+			"//@ -----------------------------------------------------------------",
+			"//@ Interface:${1:InterfaceName} — Desc: ${2:Description}",
+			"//@ -----------------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard interface documentation header"
+	},
+	"Type Header": {
+		"prefix": "typeheader",
+		"body": [
+			"//@ -----------------------------------------------------------------",
+			"//@ Type:${1:TypeName} — Desc: ${2:Description}",
+			"//@ -----------------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard type documentation header"
+	},
+	"Constant Header": {
+		"prefix": "constheader",
+		"body": [
+			"//@ -----------------------------------------------------------------",
+			"//@ Const:${1:CONSTANT_NAME} — Desc: ${2:Description}",
+			"//@ -----------------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard constant documentation header"
+	},
+	"API Route Documentation": {
+		"prefix": "apidoc",
+		"body": [
+			"// @desc ${1:Description}",
+			"// @route ${2:GET} ${3:/}",
+			"// @access ${4:Public}",
+			"",
+			"$0"
+		],
+		"description": "Insert API route documentation comments"
+	},
+	"TODO Comment": {
+		"prefix": "todo",
+		"body": ["// Todo: ${1:Description}"],
+		"description": "Insert a TODO comment"
+	},
+	"FIXME Comment": {
+		"prefix": "fixme",
+		"body": ["// FIXME: ${1:Description}"],
+		"description": "Insert a FIXME comment"
+	},
+	"ERROR Comment": {
+		"prefix": "error",
+		"body": ["// ERROR: ${1:Description}"],
+		"description": "Insert an ERROR comment"
+	},
+	"NOTE Comment": {
+		"prefix": "note",
+		"body": ["// NOTE: ${1:Description}"],
+		"description": "Insert a NOTE comment"
+	},
+	"WARNING Comment": {
+		"prefix": "warning",
+		"body": ["// WARNING: ${1:Description}"],
+		"description": "Insert a warning comment"
+	},
+	"Inline Comment": {
+		"prefix": "inline",
+		"body": ["// ${1:Description}"],
+		"description": "Insert a simple inline comment"
+	},
+	"Block Comment": {
+		"prefix": "blockcomment",
+		"body": [
+			"/*",
+			" * ${1:Explanation}",
+			" *",
+			" * ${2:Additional details}",
+			" */",
+			"",
+			"$0"
+		],
+		"description": "Insert a multiline block comment"
+	},
+	"Information Comment": {
+		"prefix": "inf",
+		"body": ["// Info: ${1:Info}"],
+		"description": "Insert an information comment"
+	}
 }

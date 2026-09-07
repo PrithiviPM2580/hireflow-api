@@ -245,15 +245,14 @@
 			"bold": true,
 			"italic": false
 		},
-	    {
-            "tag": "@",
-            "color": "#E06C75",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": true,
-            "italic": false
-        }
-
+		{
+			"tag": "@",
+			"color": "#E06C75",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": true,
+			"italic": false
+		}
 	]
 }
