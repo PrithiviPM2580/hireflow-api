@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["src/**/*.ts"]
+		"includes": ["**", "!node_modules", "!dist", "!tsconfig*.json"]
 	},
 	"formatter": {
 		"enabled": true,

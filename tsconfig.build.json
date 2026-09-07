@@ -5,5 +5,15 @@
     "allowImportingTsExtensions": false,
     "outDir": "./dist",
     "rootDir": "./src"
-  }
+  },
+    "include": ["src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests",
+    "vitest.config.ts"
+  ]
 }
+
+
+
