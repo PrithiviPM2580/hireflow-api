@@ -1,0 +1,259 @@
+{
+	"editor.defaultFormatter": "biomejs.biome",
+	"js/ts.suggest.enabled": true,
+	"editor.formatOnSave": true,
+
+	"explorer.compactFolders": false,
+
+	"better-comments.highlightPlainText": false,
+	"better-comments.multilineComments": true,
+
+	// "workbench.colorTheme": "Monokai Dimmed",
+	"workbench.iconTheme": "material-icon-theme",
+
+	// "material-icon-theme.files.associations": {
+	// 	"*.service.ts": "controller"
+	// },
+
+	"material-icon-theme.folders.associations": {
+		"dao": "scala"
+	},
+
+	"material-icon-theme.folders.customClones": [
+		{
+			"name": "config-src",
+			"base": "config",
+			"color": "orange-600",
+			"lightColor": "orange-600",
+			"folderNames": ["config"],
+			"rootFolderNames": ["config"]
+		},
+		{
+			"name": "constants-src",
+			"base": "constant",
+			"color": "yellow-600",
+			"lightColor": "yellow-600",
+			"folderNames": ["constants"],
+			"rootFolderNames": ["constants"]
+		},
+		{
+			"name": "controllers-src",
+			"base": "controller",
+			"color": "pink-600",
+			"lightColor": "pink-600",
+			"folderNames": ["controllers"],
+			"rootFolderNames": ["controllers"]
+		},
+		{
+			"name": "database-src",
+			"base": "database",
+			"color": "green-600",
+			"lightColor": "green-600",
+			"folderNames": ["database"],
+			"rootFolderNames": ["database"]
+		},
+		{
+			"name": "errors-src",
+			"base": "error",
+			"color": "red-600",
+			"lightColor": "red-600",
+			"folderNames": ["errors"],
+			"rootFolderNames": ["errors"]
+		},
+		{
+			"name": "middlewares-src",
+			"base": "middleware",
+			"color": "orange-600",
+			"lightColor": "orange-600",
+			"folderNames": ["middlewares"],
+			"rootFolderNames": ["middlewares"]
+		},
+		{
+			"name": "models-src",
+			"base": "class",
+			"color": "deep-purple-600",
+			"lightColor": "deep-purple-600",
+			"folderNames": ["models"],
+			"rootFolderNames": ["models"]
+		},
+		{
+			"name": "repositories-src",
+			"base": "repository",
+			"color": "cyan-600",
+			"lightColor": "cyan-600",
+			"folderNames": ["repositories"],
+			"rootFolderNames": ["repositories"]
+		},
+		{
+			"name": "routes-src",
+			"base": "routes",
+			"color": "blue-600",
+			"lightColor": "blue-600",
+			"folderNames": ["routes"],
+			"rootFolderNames": ["routes"]
+		},
+		{
+			"name": "services-src",
+			"base": "controller",
+			"color": "purple-600",
+			"lightColor": "purple-600",
+			"folderNames": ["services"],
+			"rootFolderNames": ["services"]
+		},
+		{
+			"name": "types-src",
+			"base": "typescript",
+			"color": "blue-600",
+			"lightColor": "blue-600",
+			"folderNames": ["types"],
+			"rootFolderNames": ["types"]
+		},
+		{
+			"name": "utils-src",
+			"base": "utils",
+			"color": "teal-400",
+			"lightColor": "teal-400",
+			"folderNames": ["utils"],
+			"rootFolderNames": ["utils"]
+		},
+		{
+			"name": "validations-src",
+			"base": "rules",
+			"color": "light-green-600",
+			"lightColor": "light-green-600",
+			"folderNames": ["validations"],
+			"rootFolderNames": ["validations"]
+		}
+	],
+
+	"material-icon-theme.files.customClones": [
+		{
+			"name": "service",
+			"base": "controller",
+			"color": "blue-600",
+			"lightColor": "blue-600",
+			"fileExtensions": ["service.ts"]
+		}
+	],
+
+	"better-comments.tags": [
+		{
+			"tag": "todo",
+			"color": "#FF8C00",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "info",
+			"color": "#00FF00",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "*",
+			"color": "#98C379",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "fixme",
+			"color": "#FF2D00",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "note",
+			"color": "#3498DB",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "warning",
+			"color": "#E5C07B",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "error",
+			"color": "#FF0000",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "!",
+			"color": "#2ECC71",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "?",
+			"color": "#3498DB",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "==",
+			"color": "#C678DD",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": true,
+			"italic": false
+		},
+		{
+			"tag": "--",
+			"color": "#61AFEF",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": true,
+			"italic": false
+		},
+		{
+			"tag": ">",
+			"color": "#E5C07B",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": true,
+			"italic": false
+		},
+	    {
+            "tag": "@",
+            "color": "#E06C75",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": true,
+            "italic": false
+        }
+
+	]
+}

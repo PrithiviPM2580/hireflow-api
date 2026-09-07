@@ -52,6 +52,7 @@
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
     "hpp-clean": "^1.0.4",
+    "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.5",
     "morgan": "^1.12.0",
