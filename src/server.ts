@@ -10,6 +10,9 @@ import logger from "./utils/logger.util";
 // Info: Port Number
 const PORT = appConfig.PORT || 3000;
 
+//> -----------------------------------------------------------------
+//> Fn:startServer() — Desc: Starting the server
+//> -----------------------------------------------------------------
 const startServer = async () => {
 	try {
 		/// Info: Connect to the database before starting the server
