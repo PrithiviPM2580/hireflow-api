@@ -12,7 +12,9 @@
     "lint:fix": "biome lint --write",
     "check": "biome check",
     "check:fix": "biome check --write",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "lint-staged": {
     "*.{js,ts,json,md,jsonc}": "biome check --write"
@@ -29,10 +31,14 @@
     "@types/nodemailer": "^8.0.1",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
+    "@types/supertest": "^7.2.1",
     "chalk": "^6.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.0",
-    "tsx": "^4.23.13"
+    "mongodb-memory-server": "^11.2.0",
+    "supertest": "^7.2.2",
+    "tsx": "^4.23.13",
+    "vitest": "^5.0.0"
   },
   "dependencies": {
     "@exortek/express-mongo-sanitize": "^3.0.1",
