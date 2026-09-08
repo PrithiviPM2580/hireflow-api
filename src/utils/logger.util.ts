@@ -7,7 +7,9 @@ import fs from "node:fs";
 import path from "node:path";
 import chalk from "chalk";
 import winston from "winston";
-import { appConfig } from "@/config/app.config";
+import { loadEnvironment } from "../config/environment.config.js";
+
+loadEnvironment();
 
 // ------------------------------------------------------
 //  Logger Interface
@@ -27,12 +29,15 @@ const { combine, timestamp, printf } = winston.format;
 // ------------------------------------------------------
 const transports: winston.transport[] = [];
 
+const nodeEnv = process.env.NODE_ENV ?? "development";
+const logLevel = process.env.LOG_LEVEL ?? "info";
+
 // ------------------------------------------------------
 //  Log Directory
 // ------------------------------------------------------
 const logDir = path.join(process.cwd(), "logs");
 
-if (appConfig.NODE_ENV === "production" && !fs.existsSync(logDir)) {
+if (nodeEnv === "production" && !fs.existsSync(logDir)) {
 	fs.mkdirSync(logDir, { recursive: true });
 }
 
@@ -94,17 +99,17 @@ const customFormat = combine(
 // ------------------------------------------------------
 //  Configure Transports
 // ------------------------------------------------------
-if (appConfig.NODE_ENV === "development") {
+if (nodeEnv === "development") {
 	// Console transport for development
 	transports.push(
 		new winston.transports.Console({
 			format: customFormat,
-			level: appConfig.LOG_LEVEL,
+			level: logLevel,
 		}),
 	);
 }
 
-if (appConfig.NODE_ENV === "production") {
+if (nodeEnv === "production") {
 	// Application log
 	transports.push(
 		new winston.transports.File({
@@ -133,10 +138,10 @@ if (appConfig.NODE_ENV === "production") {
 //  Create Logger Instance
 // ------------------------------------------------------
 const logger = winston.createLogger({
-	level: appConfig.LOG_LEVEL,
+	level: logLevel,
 	format: customFormat,
 	transports,
-	silent: appConfig.NODE_ENV === "test",
+	silent: nodeEnv === "test",
 });
 
 export default logger;

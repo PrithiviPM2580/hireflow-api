@@ -1,20 +1,21 @@
 //! ============================================================
 //! 🚀 App — Application setup and configuration
 //! ============================================================
-
-import express, { type Application } from "express";
+import "@/openapi/zod-openapi";
+import express, { type Express } from "express";
 import helmet from "helmet";
 import hpp from "hpp-clean";
 import errorHandler from "@/middlewares/error-handler.middleware";
 import cors from "@/utils/cors.util";
 import morgan from "@/utils/morgan.util";
 import sanitize from "@/utils/sanitizer.util";
+import swaggerOptions from "./config/swagger.config";
 import router from "./routes/index.route";
 
 //-- ------------------------------------------------------
 //--  App : Application Instance
 //-- ------------------------------------------------------
-const app: Application = express();
+const app: Express = express();
 
 //-- ------------------------------------------------------
 //--  Middlewares
@@ -27,6 +28,7 @@ app.use(express.json()); // Parse incoming JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse incoming URL-encoded requests
 app.use(morgan.successLoggerMiddleware); // Log successful requests
 app.use(morgan.errorLoggerMiddleware); // Log error requests
+app.use("/api-docs", ...swaggerOptions); // Set up Swagger UI for API documentation
 
 //-- ------------------------------------------------------
 //--  Router

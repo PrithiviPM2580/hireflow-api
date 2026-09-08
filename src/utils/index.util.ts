@@ -4,13 +4,13 @@
 
 import type { Response } from "express";
 import status from "http-status";
-import type { ZodError } from "zod";
+import type { z } from "zod";
 
 //> -----------------------------------------------------------------
 //> Fn:formatZodError() — Desc: Formats a Zod error into a JSON response
 //> ---------------------------------------------------------------------
 
-export const formatZodError = (error: ZodError, res: Response): Response => {
+export const formatZodError = (error: z.ZodError, res: Response): Response => {
 	// ERROR: Issues from Zod validation error
 	const issues = error.issues.map((issue) => ({
 		path: issue.path.join("."),
@@ -24,3 +24,10 @@ export const formatZodError = (error: ZodError, res: Response): Response => {
 		errors: issues,
 	});
 };
+
+export const formatError = (issues: z.core.$ZodIssue[]) =>
+	issues.map((issue) => ({
+		path: issue.path.join("."),
+		message: issue.message,
+		code: issue.code,
+	}));

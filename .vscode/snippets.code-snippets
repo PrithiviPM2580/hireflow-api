@@ -417,6 +417,17 @@
 		],
 		"description": "Database seed file header"
 	},
+	"Module File Header": {
+		"prefix": "moduleheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📦 ${1:Module} — ${2:Module description}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Module file header"
+	},
 	"Migration File Header": {
 		"prefix": "migrationheader",
 		"body": [
@@ -427,6 +438,28 @@
 			"$0"
 		],
 		"description": "Database migration file header"
+	},
+	"Root Index File Header": {
+		"prefix": "rootindexheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🚪 ${1:Root Index} — ${2:Application entry point}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Root index.ts file header"
+	},
+	"OpenAPI File Header": {
+		"prefix": "openapiheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔌 ${1:OpenAPI} — ${2:API specification}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "OpenAPI file header"
 	},
 	"Documentation File Header": {
 		"prefix": "docsheader",
