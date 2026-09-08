@@ -576,32 +576,44 @@
 	},
 	"TODO Comment": {
 		"prefix": "todo",
-		"body": ["// Todo: ${1:Description}"],
+		"body": [
+			"// Todo: ${1:Description}"
+		],
 		"description": "Insert a TODO comment"
 	},
 	"FIXME Comment": {
 		"prefix": "fixme",
-		"body": ["// FIXME: ${1:Description}"],
+		"body": [
+			"// FIXME: ${1:Description}"
+		],
 		"description": "Insert a FIXME comment"
 	},
 	"ERROR Comment": {
 		"prefix": "error",
-		"body": ["// ERROR: ${1:Description}"],
+		"body": [
+			"// ERROR: ${1:Description}"
+		],
 		"description": "Insert an ERROR comment"
 	},
 	"NOTE Comment": {
 		"prefix": "note",
-		"body": ["// NOTE: ${1:Description}"],
+		"body": [
+			"// NOTE: ${1:Description}"
+		],
 		"description": "Insert a NOTE comment"
 	},
 	"WARNING Comment": {
-		"prefix": "warning",
-		"body": ["// WARNING: ${1:Description}"],
+		"prefix": "warn",
+		"body": [
+			"// WARN: ${1:Description}"
+		],
 		"description": "Insert a warning comment"
 	},
 	"Inline Comment": {
 		"prefix": "inline",
-		"body": ["// ${1:Description}"],
+		"body": [
+			"// ${1:Description}"
+		],
 		"description": "Insert a simple inline comment"
 	},
 	"Block Comment": {
@@ -619,7 +631,9 @@
 	},
 	"Information Comment": {
 		"prefix": "inf",
-		"body": ["// Info: ${1:Info}"],
+		"body": [
+			"// Info: ${1:Info}"
+		],
 		"description": "Insert an information comment"
 	}
 }

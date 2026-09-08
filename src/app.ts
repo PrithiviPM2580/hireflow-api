@@ -10,6 +10,7 @@ import cors from "@/utils/cors.util";
 import morgan from "@/utils/morgan.util";
 import sanitize from "@/utils/sanitizer.util";
 import swaggerOptions from "./config/swagger.config";
+import compressResponse from "./middlewares/compression.middleware";
 import router from "./routes/index.route";
 
 //-- ------------------------------------------------------
@@ -28,6 +29,7 @@ app.use(express.json()); // Parse incoming JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse incoming URL-encoded requests
 app.use(morgan.successLoggerMiddleware); // Log successful requests
 app.use(morgan.errorLoggerMiddleware); // Log error requests
+app.use(compressResponse); // Compress response bodies for all requests
 app.use("/api-docs", ...swaggerOptions); // Set up Swagger UI for API documentation
 
 //-- ------------------------------------------------------

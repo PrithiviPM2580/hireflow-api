@@ -206,7 +206,7 @@
 			"italic": false
 		},
 		{
-			"tag": "warning",
+			"tag": "warn",
 			"color": "#E5C07B",
 			"strikethrough": false,
 			"underline": false,
