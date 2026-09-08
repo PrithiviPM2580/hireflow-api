@@ -11,6 +11,7 @@ import {
 import status from "http-status";
 import mongoose from "mongoose";
 import { appConfig } from "@/config/app.config";
+import authRouter from "@/modules/auth/auth.route";
 import logger from "@/utils/logger.util";
 import { sendResponse } from "@/utils/send-response.util";
 
@@ -95,5 +96,10 @@ router
 			next(error);
 		}
 	});
+
+//-- ------------------------------------------------------
+//--  Auth Route
+//-- ------------------------------------------------------
+router.use(`${appConfig.BASE_PATH}/auth`, authRouter);
 
 export default router;
