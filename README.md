@@ -1643,3 +1643,20 @@ Recruiter changes Application status
  Once that works, add `CandidateProfile`, then refresh tokens/password reset, and only afterward move to notifications, BullMQ, and interviews.
 
  That progression will teach you **why each model exists**, instead of just giving you a giant MongoDB schema to copy.
+
+Step 12 — Test Register in 3 places
+
+Once register is implemented, test it with:
+1. VS Code .http
+
+http/auth.http
+
+2. Swagger
+
+http://localhost:5000/api-docs
+
+3. Vitest
+
+tests/integeration/auth/
+
+You want all three to test the same API

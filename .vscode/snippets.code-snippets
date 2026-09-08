@@ -595,8 +595,8 @@
 		"description": "Insert a NOTE comment"
 	},
 	"WARNING Comment": {
-		"prefix": "warning",
-		"body": ["// WARNING: ${1:Description}"],
+		"prefix": "warn",
+		"body": ["// WARN: ${1:Description}"],
 		"description": "Insert a warning comment"
 	},
 	"Inline Comment": {
