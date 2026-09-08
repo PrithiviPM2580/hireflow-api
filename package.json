@@ -17,7 +17,7 @@
 		"test:run": "vitest run"
 	},
 	"lint-staged": {
-		"*.{js,ts,json,md,jsonc}": "biome check --write"
+		"*.{js,ts,json,md,jsonc,snippets.code-snippets}": "biome check --write"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.12",

@@ -100,6 +100,6 @@ router
 //-- ------------------------------------------------------
 //--  Auth Route
 //-- ------------------------------------------------------
-// router.use(`${appConfig.BASE_PATH}/auth`, authRouter);
+router.use(`${appConfig.BASE_PATH}/auth`, authRouter);
 
 export default router;
