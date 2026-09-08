@@ -417,6 +417,17 @@
 		],
 		"description": "Database seed file header"
 	},
+	"Module File Header": {
+		"prefix": "moduleheader",
+		"body": [
+			"//! ============================================================",
+			"//! 📦 ${1:Module} — ${2:Module description}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Module file header"
+	},
 	"Migration File Header": {
 		"prefix": "migrationheader",
 		"body": [
@@ -427,6 +438,28 @@
 			"$0"
 		],
 		"description": "Database migration file header"
+	},
+	"Root Index File Header": {
+		"prefix": "rootindexheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🚪 ${1:Root Index} — ${2:Application entry point}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "Root index.ts file header"
+	},
+	"OpenAPI File Header": {
+		"prefix": "openapiheader",
+		"body": [
+			"//! ============================================================",
+			"//! 🔌 ${1:OpenAPI} — ${2:API specification}",
+			"//! ============================================================",
+			"",
+			"$0"
+		],
+		"description": "OpenAPI file header"
 	},
 	"Documentation File Header": {
 		"prefix": "docsheader",
@@ -543,32 +576,44 @@
 	},
 	"TODO Comment": {
 		"prefix": "todo",
-		"body": ["// Todo: ${1:Description}"],
+		"body": [
+			"// Todo: ${1:Description}"
+		],
 		"description": "Insert a TODO comment"
 	},
 	"FIXME Comment": {
 		"prefix": "fixme",
-		"body": ["// FIXME: ${1:Description}"],
+		"body": [
+			"// FIXME: ${1:Description}"
+		],
 		"description": "Insert a FIXME comment"
 	},
 	"ERROR Comment": {
 		"prefix": "error",
-		"body": ["// ERROR: ${1:Description}"],
+		"body": [
+			"// ERROR: ${1:Description}"
+		],
 		"description": "Insert an ERROR comment"
 	},
 	"NOTE Comment": {
 		"prefix": "note",
-		"body": ["// NOTE: ${1:Description}"],
+		"body": [
+			"// NOTE: ${1:Description}"
+		],
 		"description": "Insert a NOTE comment"
 	},
 	"WARNING Comment": {
 		"prefix": "warning",
-		"body": ["// WARNING: ${1:Description}"],
+		"body": [
+			"// WARNING: ${1:Description}"
+		],
 		"description": "Insert a warning comment"
 	},
 	"Inline Comment": {
 		"prefix": "inline",
-		"body": ["// ${1:Description}"],
+		"body": [
+			"// ${1:Description}"
+		],
 		"description": "Insert a simple inline comment"
 	},
 	"Block Comment": {
@@ -586,7 +631,9 @@
 	},
 	"Information Comment": {
 		"prefix": "inf",
-		"body": ["// Info: ${1:Info}"],
+		"body": [
+			"// Info: ${1:Info}"
+		],
 		"description": "Insert an information comment"
 	}
 }

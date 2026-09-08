@@ -11,14 +11,13 @@
 	// "workbench.colorTheme": "Monokai Dimmed",
 	"workbench.iconTheme": "material-icon-theme",
 
-	// "material-icon-theme.files.associations": {
-	// 	"*.service.ts": "controller"
-	// },
+	"material-icon-theme.files.associations": {
+		"*.service.ts": "controller"
+	},
 
 	"material-icon-theme.folders.associations": {
 		"dao": "scala"
 	},
-
 	"material-icon-theme.folders.customClones": [
 		{
 			"name": "config-src",
@@ -27,6 +26,30 @@
 			"lightColor": "orange-600",
 			"folderNames": ["config"],
 			"rootFolderNames": ["config"]
+		},
+		{
+			"name": "http-src",
+			"base": "public",
+			"color": "red-600",
+			"lightColor": "red-600",
+			"folderNames": ["http"],
+			"rootFolderNames": ["http"]
+		},
+		{
+			"name": "openapi-src",
+			"base": "api",
+			"color": "purple-600",
+			"lightColor": "purple-600",
+			"folderNames": ["openapi"],
+			"rootFolderNames": ["openapi"]
+		},
+		{
+			"name": "http-src",
+			"base": "http",
+			"color": "orange-600",
+			"lightColor": "orange-600",
+			"folderNames": ["http"],
+			"rootFolderNames": ["http"]
 		},
 		{
 			"name": "constants-src",

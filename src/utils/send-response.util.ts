@@ -17,7 +17,7 @@ export const sendResponse = <T>(
 	// Info: Log the success response with details
 	logger.info(`Success Response: ${message}`, {
 		label: "Success Response",
-		data: data,
+		data,
 	});
 
 	// Info: Return a JSON response with the provided status code, message, and data
