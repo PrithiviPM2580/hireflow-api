@@ -10,6 +10,7 @@ import type {
 } from "express";
 import status from "http-status";
 import { ZodError } from "zod";
+import { RequestValidationError } from "zod-express-validator";
 import { appConfig } from "@/config/app.config";
 import { ApiError } from "@/utils/api-error.util";
 import { formatZodError } from "@/utils/index.util";
@@ -83,6 +84,27 @@ export const errorHandler: ErrorRequestHandler = (
 		return res.status(status.BAD_REQUEST).json({
 			message: "Invalid request payload",
 			...getDevelopmentDetails(err),
+		});
+	}
+
+	//-- ------------------------------------------------------
+	//--  Request Validation Error
+	//-- ------------------------------------------------------
+
+	if (err instanceof RequestValidationError) {
+		logger.warn(
+			"Request validation error",
+			{
+				method: req.method,
+				path: req.path,
+				errors: err.errors,
+			},
+			{ label: "ErrorHandler" },
+		);
+
+		return res.status(status.BAD_REQUEST).json({
+			message: "Validation failed",
+			errors: err.errors,
 		});
 	}
 

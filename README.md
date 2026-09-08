@@ -17,542 +17,1629 @@ Yes. If your goal is a **production-level Node.js backend for your internship CV
 
 I recommend building a **Job Marketplace / Hiring Platform API**.
 
-## 🚀 Project: HireFlow — Job Marketplace API
 
-Think of a backend similar to a simplified **LinkedIn/Indeed hiring system**, but your focus is entirely on the API.
 
-You can have three types of users:
+Yes. If you're using **MongoDB + Mongoose**, I’d slightly change the design from the PostgreSQL/Prisma version.
 
-```
-                    HireFlow API
-                         │
-          ┌──────────────┼──────────────┐
-          ↓              ↓              ↓
-       Candidate       Recruiter       Admin
-          │              │              │
-       Apply          Post Jobs       Manage
-       Jobs           Manage Jobs     Platform
-       Profile        Candidates
-       Resume
-```
+ For HireFlow, don't create 15 models immediately. Start with the **core models**, then add the advanced ones.
 
-This is excellent for a backend portfolio because it forces you to solve **real backend problems**, not just CRUD.
+ ## 1\. `User` — authentication + identity
 
-## Core features
-
-### Authentication
+ This should be your central account model.
 
 ```
-POST   /api/v1/auth/register
-POST   /api/v1/auth/login
-POST   /api/v1/auth/refresh
-POST   /api/v1/auth/logout
-POST   /api/v1/auth/forgot-password
-POST   /api/v1/auth/reset-password
+User
+├── _id
+├── name
+├── email
+├── passwordHash
+├── role
+├── isVerified
+├── isActive
+├── failedLoginAttempts
+├── lockedUntil
+├── createdAt
+└── updatedAt
 ```
 
-Implement:
-
-- Password hashing
-- Access + refresh tokens
-- Token rotation
-- Email verification
-- Password reset
-- Role-based authorization
-- Account lock/rate limiting
-
-### Users
+ Example:
 
 ```
-GET    /api/v1/users/me
-PATCH  /api/v1/users/me
-DELETE /api/v1/users/me
+{
+  name: "John Doe",
+  email: "john@example.com",
+  passwordHash: "...",
+  role: "CANDIDATE",
+  isVerified: true,
+  isActive: true
+}
 ```
 
-Candidates have:
+ Roles:
 
 ```
-Profile
-Skills
-Experience
-Education
-Resume
-Portfolio
+CANDIDATE
+RECRUITER
+ADMIN
 ```
 
-Recruiters have:
+ **Don't store the actual password.**
+
+---
+
+ # 2\. `CandidateProfile`
+
+ Don't put the entire candidate profile inside `User`.
+
+```
+CandidateProfile
+├── userId
+├── bio
+├── phone
+├── location
+├── skills
+├── experience
+├── education
+├── resumeUrl
+└── portfolioUrl
+```
+
+ For MongoDB, you can actually embed `skills`, `experience`, and `education` inside the candidate document.
+
+ For example:
+
+```
+{
+  userId: "...",
+
+  bio: "Backend developer interested in Node.js",
+
+  location: "Nepal",
+
+  skills: [
+    "Node.js",
+    "Express",
+    "MongoDB",
+    "TypeScript"
+  ],
+
+  experience: [
+    {
+      company: "ABC Tech",
+      position: "Backend Intern",
+      startDate: "...",
+      endDate: "...",
+      description: "..."
+    }
+  ],
+
+  education: [
+    {
+      institution: "XYZ University",
+      degree: "BSc Computer Science",
+      startDate: "...",
+      endDate: "..."
+    }
+  ],
+
+  resumeUrl: "...",
+  portfolioUrl: "..."
+}
+```
+
+ This is actually one place where MongoDB's document model works nicely.
+
+---
+
+ # 3\. `Company`
+
+ Recruiters belong to companies.
 
 ```
 Company
-Position
-Company description
+├── _id
+├── name
+├── description
+├── website
+├── logoUrl
+├── location
+├── industry
+└── createdAt
 ```
 
-### Jobs
+ You can then have:
 
 ```
-GET    /api/v1/jobs
-GET    /api/v1/jobs/:id
-
-POST   /api/v1/jobs
-PATCH  /api/v1/jobs/:id
-DELETE /api/v1/jobs/:id
+Recruiter/User
+      │
+      │ companyId
+      ↓
+   Company
 ```
 
-Make the search realistic:
+ You don't necessarily need a separate `RecruiterProfile` initially.
+
+ Your `User` can have:
 
 ```
-GET /api/v1/jobs?
-    search=nodejs
-    &location=remote
-    &salaryMin=50000
-    &salaryMax=100000
-    &experience=2
-    &page=1
-    &limit=20
-    &sort=recent
+{
+  role: "RECRUITER",
+  companyId: "..."
+}
 ```
 
-Now you're dealing with:
+ If recruiters eventually need lots of additional information, then create `RecruiterProfile`.
 
-- Filtering
-- Searching
-- Pagination
-- Sorting
-- Database indexes
-- Query optimization
+---
 
-That's much more interesting to an interviewer.
+ # 4\. `Job`
 
-## Applications
-
-This should be one of your most important modules.
+ This is one of your main models.
 
 ```
-POST   /api/v1/jobs/:jobId/apply
-
-GET    /api/v1/applications/me
-
-GET    /api/v1/jobs/:jobId/applications
-
-PATCH  /api/v1/applications/:id/status
+Job
+├── _id
+├── recruiterId
+├── companyId
+├── title
+├── description
+├── location
+├── employmentType
+├── experienceLevel
+├── salary
+├── skills
+├── status
+├── applicationCount
+├── expiresAt
+├── createdAt
+└── updatedAt
 ```
 
-Application status:
+ Example:
+
+```
+{
+  recruiterId: "...",
+  companyId: "...",
+
+  title: "Backend Developer",
+
+  description: "We are looking for...",
+
+  location: "Remote",
+
+  employmentType: "FULL_TIME",
+
+  experienceLevel: "JUNIOR",
+
+  salary: {
+    min: 50000,
+    max: 100000,
+    currency: "USD"
+  },
+
+  skills: [
+    "Node.js",
+    "Express",
+    "MongoDB"
+  ],
+
+  status: "PUBLISHED",
+
+  applicationCount: 12
+}
+```
+
+---
+
+ # 5\. `Application`
+
+ This is probably your **most important business model**.
+
+```
+Application
+├── _id
+├── jobId
+├── candidateId
+├── resumeUrl
+├── coverLetter
+├── status
+├── appliedAt
+├── updatedAt
+└── timestamps
+```
+
+ For example:
+
+```
+{
+  jobId: "...",
+  candidateId: "...",
+
+  resumeUrl: "...",
+
+  coverLetter: "I am interested in this position...",
+
+  status: "SCREENING",
+
+  appliedAt: "..."
+}
+```
+
+ Statuses:
 
 ```
 APPLIED
-   ↓
 SCREENING
-   ↓
 INTERVIEW
-   ↓
 OFFER
-   ↓
 HIRED
-```
-
-or:
-
-```
 REJECTED
 WITHDRAWN
 ```
 
-You can enforce valid state transitions in your backend.
+ You should also enforce that a candidate **cannot apply to the same job twice**.
 
-## Notifications
-
-Now you start getting into **real production architecture**.
-
-For example:
+ With MongoDB, you'd create a compound unique index:
 
 ```
-Recruiter changes application status
-              ↓
-          Event created
-              ↓
-        Background worker
-              ↓
-       Send notification
-              ↓
-         Email / in-app
+applicationSchema.index(
+  { jobId: 1, candidateId: 1 },
+  { unique: true }
+);
 ```
 
-Use something like **Redis + BullMQ** for background jobs.
-
-Examples:
-
-- Application received
-- Application status changed
-- Interview scheduled
-- Password reset email
-- Email verification
-- Job recommendation
-
-## Interview scheduling
-
-Add:
-
-```
-POST   /api/v1/interviews
-GET    /api/v1/interviews
-PATCH  /api/v1/interviews/:id
-DELETE /api/v1/interviews/:id
-```
-
-Handle:
-
-- Interview time
-- Candidate
-- Recruiter
-- Status
-- Meeting URL
-- Rescheduling
-
-This introduces interesting problems such as **time zones and conflicting schedules**.
-
-## Admin
-
-```
-GET    /api/v1/admin/users
-GET    /api/v1/admin/jobs
-GET    /api/v1/admin/applications
-
-PATCH  /api/v1/admin/users/:id/status
-PATCH  /api/v1/admin/jobs/:id/status
-```
-
-Admin can:
-
-- Suspend users
-- Moderate jobs
-- Remove fraudulent listings
-- View platform statistics
+ That's a great real-world backend detail to discuss in an interview.
 
 ---
 
-# Your architecture
+ # 6\. `RefreshToken` / `Session`
 
-I'd use the **module-based architecture** we discussed:
-
-```
-src/
-│
-├── config/
-│
-├── modules/
-│   │
-│   ├── auth/
-│   │   ├── auth.controller.ts
-│   │   ├── auth.service.ts
-│   │   ├── auth.repository.ts
-│   │   ├── auth.routes.ts
-│   │   ├── auth.validation.ts
-│   │   └── auth.types.ts
-│   │
-│   ├── users/
-│   ├── jobs/
-│   ├── applications/
-│   ├── companies/
-│   ├── interviews/
-│   ├── notifications/
-│   └── admin/
-│
-├── middlewares/
-│   ├── auth.middleware.ts
-│   ├── error.middleware.ts
-│   ├── rate-limit.middleware.ts
-│   └── validation.middleware.ts
-│
-├── utils/
-│
-├── app.ts
-└── server.ts
-```
-
-The request flow:
+ For authentication:
 
 ```
-Request
-   ↓
-Rate Limiter
-   ↓
-Authentication
-   ↓
-Validation
-   ↓
-Route
-   ↓
-Controller
-   ↓
-Service
-   ↓
-Repository
-   ↓
-PostgreSQL
+RefreshToken
+├── _id
+├── userId
+├── tokenHash
+├── expiresAt
+├── revokedAt
+├── createdAt
+└── userAgent / ipAddress (optional)
 ```
 
-That's the architecture I want you to understand—not just copy.
+ Don't store raw refresh tokens if you can avoid it.
+
+ This allows:
+
+```
+Login
+  ↓
+Access Token
+  ↓
+Refresh Token
+  ↓
+Store hashed refresh token
+```
+
+ Then you can implement **refresh-token rotation** and logout.
 
 ---
 
-# Technology stack
+ # 7\. `Notification`
 
-For your current Node.js path, I'd use:
-
-| Area            | Technology                   |
-| --------------- | ---------------------------- |
-| Runtime         | Node.js                      |
-| Language        | TypeScript                   |
-| Framework       | Express                      |
-| Database        | PostgreSQL                   |
-| ORM             | Prisma                       |
-| Authentication  | JWT                          |
-| Validation      | Zod                          |
-| API docs        | OpenAPI + Swagger UI         |
-| Cache           | Redis                        |
-| Background jobs | BullMQ                       |
-| Testing         | Vitest                       |
-| API testing     | Postman                      |
-| Containers      | Docker                       |
-| CI/CD           | GitHub Actions               |
-| Logging         | Pino                         |
-| Security        | Helmet + rate limiting       |
-| Deployment      | Any reputable cloud platform |
-
-You **don't need to learn all of these before starting**.
-
-Build the core first, then progressively introduce the production features.
-
----
-
-# The feature that will make it stand out
-
-Don't just make:
+ You'll need this when you introduce background jobs.
 
 ```
-POST /jobs
-GET /jobs
-DELETE /jobs
+Notification
+├── _id
+├── userId
+├── type
+├── title
+├── message
+├── isRead
+├── data
+└── createdAt
 ```
 
-Make the backend demonstrate **engineering decisions**.
-
-For example:
-
-### Database transactions
-
-When a candidate applies:
-
-```
-BEGIN TRANSACTION
-
-Create application
-↓
-Update job application count
-↓
-Create notification
-
-COMMIT
-```
-
-If something fails:
-
-```
-ROLLBACK
-```
-
-### Idempotency
-
-For important operations, prevent accidental duplicate requests:
-
-```
-POST /payments
-Idempotency-Key: abc123
-```
-
-Even if the client retries the request, you don't accidentally perform the operation twice.
-
-### Rate limiting
-
-For example:
-
-```
-/login
-   ↓
-5 attempts / minute
-```
-
-while normal endpoints might have a different limit.
-
-### Pagination
-
-Don't return 100,000 jobs:
+ Example:
 
 ```
 {
-  "data": [],
-  "pagination": {
-    "page": 1,
-    "limit": 20,
-    "total": 1523,
-    "totalPages": 77
-  }
+  userId: "...",
+
+  type: "APPLICATION_STATUS_CHANGED",
+
+  title: "Application Update",
+
+  message: "Your application moved to Interview.",
+
+  isRead: false
 }
-```
-
-### Consistent errors
-
-Instead of random errors from every controller:
-
-```
-{
-  "success": false,
-  "error": {
-    "code": "JOB_NOT_FOUND",
-    "message": "Job not found"
-  }
-}
-```
-
-### Observability
-
-Have structured logs such as:
-
-```
-INFO  POST /api/v1/jobs 201 124ms
-INFO  GET /api/v1/jobs 200 43ms
-ERROR POST /api/v1/applications 500 82ms
 ```
 
 ---
 
-# Your API should be publicly testable
+ # 8\. `Interview`
 
-This connects directly to your earlier Swagger question.
-
-Your deployed project should have:
+ For interview scheduling:
 
 ```
-https://your-domain.com/api/v1/...
+Interview
+├── _id
+├── applicationId
+├── candidateId
+├── recruiterId
+├── scheduledAt
+├── duration
+├── timezone
+├── meetingUrl
+├── status
+├── notes
+└── createdAt
 ```
 
-and:
+ Statuses could be:
 
 ```
-https://your-domain.com/api-docs
+SCHEDULED
+RESCHEDULED
+COMPLETED
+CANCELLED
 ```
 
-The second one opens **Swagger UI**, generated from your **OpenAPI specification**.
-
-A recruiter can literally:
-
-```
-Open API docs
-      ↓
-Authenticate
-      ↓
-Try GET /jobs
-      ↓
-Try POST /jobs
-      ↓
-Try POST /jobs/:id/apply
-      ↓
-See your real API responses
-```
-
-That's exactly the type of portfolio project I'd want you to show.
+ The `timezone` field is important because you're dealing with real people in potentially different locations.
 
 ---
 
-# Build it in stages
+ # 9\. `PasswordResetToken`
 
-**Don't try to build the entire thing at once.**
-
-### Stage 1 — Foundation
+ For:
 
 ```
-Node
-TypeScript
-Express
-Environment variables
-Error handling
-Git
+POST /auth/forgot-password
+POST /auth/reset-password
 ```
 
-### Stage 2 — Database
+ You can use a separate collection:
 
 ```
-PostgreSQL
-Prisma
-Users
-Companies
-Jobs
-Applications
+PasswordResetToken
+├── _id
+├── userId
+├── tokenHash
+├── expiresAt
+├── usedAt
+└── createdAt
 ```
 
-### Stage 3 — Authentication
+ You can also use MongoDB's **TTL index** so expired reset-token documents automatically disappear.
+
+---
+
+ # 10\. Optional: `EmailVerificationToken`
+
+ For:
+
+```
+POST /auth/register
+        ↓
+verification email
+        ↓
+verify account
+```
+
+ Model:
+
+```
+EmailVerificationToken
+├── _id
+├── userId
+├── tokenHash
+├── expiresAt
+├── usedAt
+└── createdAt
+```
+
+ Again, a TTL index is useful.
+
+---
+
+ # Your final model structure
+
+ I would build it like this:
+
+```
+models/
+│
+├── User.ts
+├── CandidateProfile.ts
+├── Company.ts
+├── Job.ts
+├── Application.ts
+├── RefreshToken.ts
+├── Notification.ts
+├── Interview.ts
+├── PasswordResetToken.ts
+└── EmailVerificationToken.ts
+```
+
+ But **don't build all of them on day one**.
+
+ ## Build in this order
+
+ ### Phase 1 — Authentication
+
+```
+User
+RefreshToken
+PasswordResetToken
+EmailVerificationToken
+```
+
+ Get these working:
 
 ```
 Register
 Login
-JWT
-Refresh tokens
-Roles
-Authorization
+Refresh
+Logout
+Email verification
+Forgot password
+Reset password
 ```
 
-### Stage 4 — Core API
+ ### Phase 2 — Core hiring system
 
 ```
-Jobs
-Companies
-Applications
-Profiles
+CandidateProfile
+Company
+Job
+Application
 ```
 
-### Stage 5 — Production features
+ Then you can build:
 
 ```
-Validation
-Rate limiting
-Logging
-Pagination
-Filtering
-Sorting
-Transactions
-Indexes
+POST /jobs
+GET /jobs
+GET /jobs/:id
+POST /jobs/:id/apply
+GET /applications/me
+GET /jobs/:jobId/applications
+PATCH /applications/:id/status
 ```
 
-### Stage 6 — Advanced
+ ### Phase 3 — Advanced features
+
+```
+Notification
+Interview
+```
+
+ Then introduce:
 
 ```
 Redis
 BullMQ
-Notifications
 Email
-Interview scheduling
-Caching
+Background workers
 ```
 
-### Stage 7 — Professional delivery
+---
+
+ ## One MongoDB-specific decision
+
+ Unlike PostgreSQL, **don't automatically make every concept a separate collection**.
+
+ MongoDB lets you embed data when it naturally belongs to its parent.
+
+ For example, I'd probably do:
 
 ```
-Swagger/OpenAPI
-Unit tests
-Integration tests
-Docker
-GitHub Actions
-Deployment
-Monitoring
-README
+CandidateProfile
+    │
+    ├── skills[]
+    ├── experience[]
+    └── education[]
 ```
 
-At the end, your GitHub repository isn't just:
+ rather than:
 
-> "Node.js project"
+```
+Candidate
+Skill
+Experience
+Education
+```
 
-It demonstrates **API design, databases, authentication, architecture, security, testing, deployment, and production concerns**.
+ For your project, that's simpler and demonstrates that you understand **why MongoDB's document model is useful**, rather than just using MongoDB as "SQL but different."
 
-**That's the project I'd choose for your backend internship CV.** And since you're learning Node.js now, we can build it progressively rather than dropping a huge codebase on you that you won't understand.
+ The core relationships would look like:
+
+```
+                    User
+                 /    |    \
+                /     |     \
+        Candidate  Recruiter  Admin
+            |          |
+            |       Company
+            |          |
+            |         Jobs
+            |          |
+            └──── Applications
+                       |
+                   Interviews
+                       |
+                  Notifications
+```
+
+ **If you're learning this project to understand backend architecture, I'd start with just `User → Company → Job → Application` and build those four properly before adding anything else.**
+
+
+ Absolutely. Since you're using **MongoDB + Mongoose + TypeScript**, let's define the schemas for the models we discussed.
+
+ I'd structure them like this:
+
+```
+src/
+└── modules/
+    ├── auth/
+    │   ├── user.model.ts
+    │   ├── refresh-token.model.ts
+    │   ├── password-reset-token.model.ts
+    │   └── email-verification-token.model.ts
+    │
+    ├── candidates/
+    │   └── candidate-profile.model.ts
+    │
+    ├── companies/
+    │   └── company.model.ts
+    │
+    ├── jobs/
+    │   └── job.model.ts
+    │
+    ├── applications/
+    │   └── application.model.ts
+    │
+    ├── interviews/
+    │   └── interview.model.ts
+    │
+    └── notifications/
+        └── notification.model.ts
+```
+
+ I'll keep the schemas practical rather than making them unnecessarily complicated.
+
+ ## 1\. User Schema
+
+ This is the most important one for authentication.
+
+```
+import mongoose, { Schema, Document } from "mongoose";
+
+export type UserRole = "CANDIDATE" | "RECRUITER" | "ADMIN";
+
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  passwordHash: string;
+  role: UserRole;
+
+  isVerified: boolean;
+  isActive: boolean;
+
+  failedLoginAttempts: number;
+  lockedUntil?: Date;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const userSchema = new Schema<IUser>(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 100,
+    },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    passwordHash: {
+      type: String,
+      required: true,
+    },
+
+    role: {
+      type: String,
+      enum: ["CANDIDATE", "RECRUITER", "ADMIN"],
+      default: "CANDIDATE",
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+
+    lockedUntil: {
+      type: Date,
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const User = mongoose.model<IUser>("User", userSchema);
+```
+
+ One important point: **never return `passwordHash` in API responses**. Later, you can also configure Mongoose to exclude it by default.
+
+---
+
+ # 2\. Candidate Profile Schema
+
+ The authentication information stays in `User`.
+
+ Professional information goes here.
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+interface IExperience {
+  company: string;
+  position: string;
+  startDate: Date;
+  endDate?: Date;
+  description?: string;
+}
+
+interface IEducation {
+  institution: string;
+  degree: string;
+  field?: string;
+  startDate: Date;
+  endDate?: Date;
+}
+
+export interface ICandidateProfile extends Document {
+  userId: Types.ObjectId;
+
+  bio?: string;
+  phone?: string;
+  location?: string;
+
+  skills: string[];
+
+  experience: IExperience[];
+
+  education: IEducation[];
+
+  resumeUrl?: string;
+  portfolioUrl?: string;
+}
+
+const experienceSchema = new Schema<IExperience>(
+  {
+    company: {
+      type: String,
+      required: true,
+    },
+
+    position: {
+      type: String,
+      required: true,
+    },
+
+    startDate: {
+      type: Date,
+      required: true,
+    },
+
+    endDate: {
+      type: Date,
+    },
+
+    description: {
+      type: String,
+    },
+  },
+  { _id: false }
+);
+
+const educationSchema = new Schema<IEducation>(
+  {
+    institution: {
+      type: String,
+      required: true,
+    },
+
+    degree: {
+      type: String,
+      required: true,
+    },
+
+    field: {
+      type: String,
+    },
+
+    startDate: {
+      type: Date,
+      required: true,
+    },
+
+    endDate: {
+      type: Date,
+    },
+  },
+  { _id: false }
+);
+
+const candidateProfileSchema = new Schema<ICandidateProfile>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
+    },
+
+    bio: {
+      type: String,
+      maxlength: 1000,
+    },
+
+    phone: {
+      type: String,
+    },
+
+    location: {
+      type: String,
+    },
+
+    skills: {
+      type: [String],
+      default: [],
+    },
+
+    experience: {
+      type: [experienceSchema],
+      default: [],
+    },
+
+    education: {
+      type: [educationSchema],
+      default: [],
+    },
+
+    resumeUrl: {
+      type: String,
+    },
+
+    portfolioUrl: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const CandidateProfile = mongoose.model<ICandidateProfile>(
+  "CandidateProfile",
+  candidateProfileSchema
+);
+```
+
+---
+
+ # 3\. Company Schema
+
+```
+import mongoose, { Schema, Document } from "mongoose";
+
+export interface ICompany extends Document {
+  name: string;
+  description?: string;
+  website?: string;
+  logoUrl?: string;
+  location?: string;
+  industry?: string;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const companySchema = new Schema<ICompany>(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 150,
+    },
+
+    description: {
+      type: String,
+      maxlength: 2000,
+    },
+
+    website: {
+      type: String,
+    },
+
+    logoUrl: {
+      type: String,
+    },
+
+    location: {
+      type: String,
+    },
+
+    industry: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const Company = mongoose.model<ICompany>(
+  "Company",
+  companySchema
+);
+```
+
+---
+
+ # 4\. Job Schema
+
+ This one needs good indexes because you'll eventually search/filter jobs heavily.
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+export type JobStatus = "DRAFT" | "PUBLISHED" | "CLOSED";
+
+export type EmploymentType =
+  | "FULL_TIME"
+  | "PART_TIME"
+  | "CONTRACT"
+  | "INTERNSHIP";
+
+export interface IJob extends Document {
+  recruiterId: Types.ObjectId;
+  companyId: Types.ObjectId;
+
+  title: string;
+  description: string;
+
+  location: string;
+  employmentType: EmploymentType;
+  experienceLevel: string;
+
+  salary?: {
+    min?: number;
+    max?: number;
+    currency: string;
+  };
+
+  skills: string[];
+
+  status: JobStatus;
+
+  applicationCount: number;
+
+  expiresAt?: Date;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const jobSchema = new Schema<IJob>(
+  {
+    recruiterId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    companyId: {
+      type: Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
+      index: true,
+    },
+
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 200,
+    },
+
+    description: {
+      type: String,
+      required: true,
+    },
+
+    location: {
+      type: String,
+      required: true,
+      index: true,
+    },
+
+    employmentType: {
+      type: String,
+      enum: [
+        "FULL_TIME",
+        "PART_TIME",
+        "CONTRACT",
+        "INTERNSHIP",
+      ],
+      required: true,
+    },
+
+    experienceLevel: {
+      type: String,
+      required: true,
+    },
+
+    salary: {
+      min: Number,
+      max: Number,
+      currency: {
+        type: String,
+        default: "USD",
+      },
+    },
+
+    skills: {
+      type: [String],
+      default: [],
+    },
+
+    status: {
+      type: String,
+      enum: ["DRAFT", "PUBLISHED", "CLOSED"],
+      default: "DRAFT",
+      index: true,
+    },
+
+    applicationCount: {
+      type: Number,
+      default: 0,
+    },
+
+    expiresAt: {
+      type: Date,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+jobSchema.index({
+  title: "text",
+  description: "text",
+  skills: "text",
+});
+
+jobSchema.index({
+  status: 1,
+  createdAt: -1,
+});
+
+export const Job = mongoose.model<IJob>("Job", jobSchema);
+```
+
+ The indexes are important for the search functionality you'll build later.
+
+---
+
+ # 5\. Application Schema
+
+ This is where things get interesting.
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+export type ApplicationStatus =
+  | "APPLIED"
+  | "SCREENING"
+  | "INTERVIEW"
+  | "OFFER"
+  | "HIRED"
+  | "REJECTED"
+  | "WITHDRAWN";
+
+export interface IApplication extends Document {
+  jobId: Types.ObjectId;
+  candidateId: Types.ObjectId;
+
+  resumeUrl?: string;
+  coverLetter?: string;
+
+  status: ApplicationStatus;
+
+  appliedAt: Date;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const applicationSchema = new Schema<IApplication>(
+  {
+    jobId: {
+      type: Schema.Types.ObjectId,
+      ref: "Job",
+      required: true,
+    },
+
+    candidateId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    resumeUrl: {
+      type: String,
+    },
+
+    coverLetter: {
+      type: String,
+      maxlength: 5000,
+    },
+
+    status: {
+      type: String,
+      enum: [
+        "APPLIED",
+        "SCREENING",
+        "INTERVIEW",
+        "OFFER",
+        "HIRED",
+        "REJECTED",
+        "WITHDRAWN",
+      ],
+      default: "APPLIED",
+    },
+
+    appliedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// Prevent candidate from applying to same job twice
+applicationSchema.index(
+  {
+    jobId: 1,
+    candidateId: 1,
+  },
+  {
+    unique: true,
+  }
+);
+
+applicationSchema.index({
+  candidateId: 1,
+  createdAt: -1,
+});
+
+applicationSchema.index({
+  jobId: 1,
+  status: 1,
+});
+
+export const Application = mongoose.model<IApplication>(
+  "Application",
+  applicationSchema
+);
+```
+
+ That compound unique index is **very important**.
+
+ It means MongoDB itself helps enforce:
+
+```
+Candidate A + Job X → one application
+Candidate A + Job X → ❌ duplicate
+```
+
+---
+
+ # 6\. Refresh Token Schema
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+export interface IRefreshToken extends Document {
+  userId: Types.ObjectId;
+  tokenHash: string;
+  expiresAt: Date;
+  revokedAt?: Date;
+  createdAt: Date;
+}
+
+const refreshTokenSchema = new Schema<IRefreshToken>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    tokenHash: {
+      type: String,
+      required: true,
+    },
+
+    expiresAt: {
+      type: Date,
+      required: true,
+    },
+
+    revokedAt: {
+      type: Date,
+      default: null,
+    },
+  },
+  {
+    timestamps: {
+      createdAt: true,
+      updatedAt: false,
+    },
+  }
+);
+
+export const RefreshToken = mongoose.model<IRefreshToken>(
+  "RefreshToken",
+  refreshTokenSchema
+);
+```
+
+ Later you can add a TTL index to automatically remove expired tokens.
+
+---
+
+ # 7\. Password Reset Token
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+export interface IPasswordResetToken extends Document {
+  userId: Types.ObjectId;
+  tokenHash: string;
+  expiresAt: Date;
+  usedAt?: Date;
+}
+
+const passwordResetTokenSchema =
+  new Schema<IPasswordResetToken>(
+    {
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        index: true,
+      },
+
+      tokenHash: {
+        type: String,
+        required: true,
+      },
+
+      expiresAt: {
+        type: Date,
+        required: true,
+      },
+
+      usedAt: {
+        type: Date,
+        default: null,
+      },
+    },
+    {
+      timestamps: true,
+    }
+  );
+
+// Automatically delete expired tokens
+passwordResetTokenSchema.index(
+  { expiresAt: 1 },
+  { expireAfterSeconds: 0 }
+);
+
+export const PasswordResetToken =
+  mongoose.model<IPasswordResetToken>(
+    "PasswordResetToken",
+    passwordResetTokenSchema
+  );
+```
+
+---
+
+ # 8\. Email Verification Token
+
+ Very similar:
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+export interface IEmailVerificationToken extends Document {
+  userId: Types.ObjectId;
+  tokenHash: string;
+  expiresAt: Date;
+  usedAt?: Date;
+}
+
+const emailVerificationTokenSchema =
+  new Schema<IEmailVerificationToken>(
+    {
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        index: true,
+      },
+
+      tokenHash: {
+        type: String,
+        required: true,
+      },
+
+      expiresAt: {
+        type: Date,
+        required: true,
+      },
+
+      usedAt: {
+        type: Date,
+        default: null,
+      },
+    },
+    {
+      timestamps: true,
+    }
+  );
+
+emailVerificationTokenSchema.index(
+  { expiresAt: 1 },
+  { expireAfterSeconds: 0 }
+);
+
+export const EmailVerificationToken =
+  mongoose.model<IEmailVerificationToken>(
+    "EmailVerificationToken",
+    emailVerificationTokenSchema
+  );
+```
+
+---
+
+ # 9\. Notification Schema
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+export type NotificationType =
+  | "APPLICATION_RECEIVED"
+  | "APPLICATION_STATUS_CHANGED"
+  | "INTERVIEW_SCHEDULED"
+  | "INTERVIEW_RESCHEDULED"
+  | "INTERVIEW_CANCELLED";
+
+export interface INotification extends Document {
+  userId: Types.ObjectId;
+
+  type: NotificationType;
+
+  title: string;
+  message: string;
+
+  isRead: boolean;
+
+  data?: Record<string, unknown>;
+
+  createdAt: Date;
+}
+
+const notificationSchema = new Schema<INotification>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    type: {
+      type: String,
+      enum: [
+        "APPLICATION_RECEIVED",
+        "APPLICATION_STATUS_CHANGED",
+        "INTERVIEW_SCHEDULED",
+        "INTERVIEW_RESCHEDULED",
+        "INTERVIEW_CANCELLED",
+      ],
+      required: true,
+    },
+
+    title: {
+      type: String,
+      required: true,
+    },
+
+    message: {
+      type: String,
+      required: true,
+    },
+
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
+
+    data: {
+      type: Schema.Types.Mixed,
+    },
+  },
+  {
+    timestamps: {
+      createdAt: true,
+      updatedAt: false,
+    },
+  }
+);
+
+notificationSchema.index({
+  userId: 1,
+  isRead: 1,
+  createdAt: -1,
+});
+
+export const Notification = mongoose.model<INotification>(
+  "Notification",
+  notificationSchema
+);
+```
+
+---
+
+ # 10\. Interview Schema
+
+```
+import mongoose, { Schema, Document, Types } from "mongoose";
+
+export type InterviewStatus =
+  | "SCHEDULED"
+  | "RESCHEDULED"
+  | "COMPLETED"
+  | "CANCELLED";
+
+export interface IInterview extends Document {
+  applicationId: Types.ObjectId;
+
+  candidateId: Types.ObjectId;
+  recruiterId: Types.ObjectId;
+
+  scheduledAt: Date;
+  duration: number;
+  timezone: string;
+
+  meetingUrl?: string;
+
+  status: InterviewStatus;
+
+  notes?: string;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const interviewSchema = new Schema<IInterview>(
+  {
+    applicationId: {
+      type: Schema.Types.ObjectId,
+      ref: "Application",
+      required: true,
+      index: true,
+    },
+
+    candidateId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    recruiterId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    scheduledAt: {
+      type: Date,
+      required: true,
+    },
+
+    duration: {
+      type: Number,
+      required: true,
+      min: 15,
+      max: 240,
+    },
+
+    timezone: {
+      type: String,
+      required: true,
+    },
+
+    meetingUrl: {
+      type: String,
+    },
+
+    status: {
+      type: String,
+      enum: [
+        "SCHEDULED",
+        "RESCHEDULED",
+        "COMPLETED",
+        "CANCELLED",
+      ],
+      default: "SCHEDULED",
+    },
+
+    notes: {
+      type: String,
+      maxlength: 3000,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+interviewSchema.index({
+  candidateId: 1,
+  scheduledAt: 1,
+});
+
+interviewSchema.index({
+  recruiterId: 1,
+  scheduledAt: 1,
+});
+
+export const Interview = mongoose.model<IInterview>(
+  "Interview",
+  interviewSchema
+);
+```
+
+---
+
+ # The whole database now looks like this
+
+```
+MongoDB
+│
+├── users
+│   ├── authentication
+│   ├── role
+│   └── account security
+│
+├── candidateprofiles
+│   ├── skills
+│   ├── experience
+│   ├── education
+│   └── resume
+│
+├── companies
+│
+├── jobs
+│
+├── applications
+│
+├── refreshtokens
+│
+├── passwordresettokens
+│
+├── emailverificationtokens
+│
+├── notifications
+│
+└── interviews
+```
+
+ And the main relationships are:
+
+```
+User
+ │
+ ├──────── CandidateProfile
+ │
+ ├──────── Company (if recruiter)
+ │
+ ├──────── RefreshTokens
+ │
+ ├──────── Applications
+ │
+ ├──────── Notifications
+ │
+ └──────── Interviews
+              │
+              ↓
+         Application
+              │
+              ↓
+             Job
+              │
+              ↓
+           Company
+```
+
+ ### But don't code all of this now
+
+ For your learning path, I strongly recommend starting with only:
+
+```
+User
+Company
+Job
+Application
+```
+
+ Get these four working end-to-end first:
+
+```
+Register
+   ↓
+Login
+   ↓
+Recruiter creates Company
+   ↓
+Recruiter creates Job
+   ↓
+Candidate views Jobs
+   ↓
+Candidate applies
+   ↓
+Recruiter views Applications
+   ↓
+Recruiter changes Application status
+```
+
+ Once that works, add `CandidateProfile`, then refresh tokens/password reset, and only afterward move to notifications, BullMQ, and interviews.
+
+ That progression will teach you **why each model exists**, instead of just giving you a giant MongoDB schema to copy.
