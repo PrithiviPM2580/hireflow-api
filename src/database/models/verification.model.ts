@@ -3,6 +3,7 @@
 //! ============================================================
 
 import mongoose, { type Document, Schema, type Types } from "mongoose";
+import { hashValue } from "@/utils/bcrypt.util";
 
 // Info: Interface for the verification model
 export interface IVerification extends Document {
@@ -42,16 +43,31 @@ const verificationSchema = new Schema<IVerification>(
 	},
 	{
 		timestamps: true,
+		toJSON: {
+			transform: (_doc, ret) => {
+				const obj = ret as Record<string, unknown>;
+				delete obj.tokenHash;
+				delete obj.__v;
+				return obj;
+			},
+		},
 	},
 );
 
 // Info: Index to automatically delete expired verification tokens after their expiration time
 verificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
+// Info: Pre-save hook to hash the token before saving it to the database
+verificationSchema.pre<IVerification>("save", async function () {
+	if (!this.isModified("tokenHash")) return;
+
+	this.tokenHash = await hashValue(this.tokenHash);
+});
+
 // Info: Create and export the EmailVerificationToken model
-const EmailVerificationToken = mongoose.model<IVerification>(
+const Verification = mongoose.model<IVerification>(
 	"EmailVerificationToken",
 	verificationSchema,
 );
 
-export default EmailVerificationToken;
+export default Verification;

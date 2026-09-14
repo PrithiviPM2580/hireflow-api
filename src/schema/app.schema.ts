@@ -36,19 +36,21 @@ export const appConfigSchema = z.object({
 
 	JWT_REFRESH_SECRET: z.string("JWT refresh secret must be provided"),
 	JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
+	JWT_EMAIL_VERIFICATION_SECRET: z.string(
+		"JWT email verification secret must be provided",
+	),
+	JWT_EMAIL_VERIFICATION_EXPIRES_IN: z
+		.string("JWT email verification expires in must be provided")
+		.default("30m"),
+	JWT_PASSWORD_RESET_SECRET: z
+		.string("JWT password reset secret must be provided")
+		.default("15m"),
 
-	EMAIL_VERIFICATION_EXPIRES_MINUTES: z.coerce
-		.number()
-		.int()
-		.positive()
-		.default(15),
-
-	PASSWORD_RESET_EXPIRES_MINUTES: z.coerce
-		.number()
-		.int()
-		.positive()
-		.default(15),
-
+	JWT_PASSWORD_RESET_EXPIRES_IN: z
+		.string("JWT password reset secret must be provided")
+		.default("15m"),
+	RESEND_API_KEY: z.string("Resend API key must be provided"),
+	EMAIL_FROM: z.string("Email from address must be provided"),
 	GOOGLE_CLIENT_ID: z.string("Google client ID must be provided"),
 	GOOGLE_CLIENT_SECRET: z.string("Google client secret must be provided"),
 	GOOGLE_CALLBACK_URL: z.string("Google callback URL must be provided"),
