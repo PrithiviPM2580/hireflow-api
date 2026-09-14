@@ -2,7 +2,7 @@
 //! 🧱 Application Model — Schema for application model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Information about the application status
 export type ApplicationStatus =
@@ -15,7 +15,8 @@ export type ApplicationStatus =
 	| "WITHDRAWN";
 
 // Info: Interface for the application model
-export interface IApplication extends Document {
+export interface IApplication {
+	_id: Types.ObjectId;
 	jobId: Types.ObjectId;
 	candidateId: Types.ObjectId;
 	resumeUrl?: string;

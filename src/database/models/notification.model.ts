@@ -2,7 +2,7 @@
 //! 🧱 Notification Model — Schema for notification model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Information about the notification type
 export type NotificationType =
@@ -13,7 +13,8 @@ export type NotificationType =
 	| "INTERVIEW_CANCELLED";
 
 // Info: Interface for the notification model
-export interface INotification extends Document {
+export interface INotification {
+	_id: Types.ObjectId;
 	userId: Types.ObjectId;
 
 	type: NotificationType;

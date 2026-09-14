@@ -2,10 +2,11 @@
 //! 🧱 Reset Model — Reset schema for reset model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Interface for the reset model
-export interface IReset extends Document {
+export interface IReset {
+	_id: Types.ObjectId;
 	userId: Types.ObjectId;
 	tokenHash: string;
 	expiresAt: Date;

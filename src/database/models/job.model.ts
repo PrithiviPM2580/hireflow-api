@@ -2,7 +2,7 @@
 //! 🧱 Job Model — Schema for job model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Information about the job status
 export type JobStatus = "DRAFT" | "PUBLISHED" | "CLOSED";
@@ -15,7 +15,8 @@ export type EmploymentType =
 	| "INTERNSHIP";
 
 // Info: Interface for the job model
-export interface IJob extends Document {
+export interface IJob {
+	_id: Types.ObjectId;
 	recruiterId: Types.ObjectId;
 	companyId: Types.ObjectId;
 	title: string;

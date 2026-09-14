@@ -2,10 +2,11 @@
 //! 🧱 Session Model — Schema for session model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Interface for session model
-export interface ISession extends Document {
+export interface ISession {
+	_id: Types.ObjectId;
 	userId: Types.ObjectId;
 	tokenHash: string;
 	expiresAt: Date;
