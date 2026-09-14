@@ -2,7 +2,7 @@
 //! 💾 Repository — Data access layer of authentication
 //! ============================================================
 
-import User from "@/database/models/user.model";
+import User, { type IUser } from "@/database/models/user.model";
 import type { CreateUserInput } from "./auth.types";
 
 //> -----------------------------------------------------------------
@@ -16,7 +16,10 @@ export const isUserExist = async (email: string): Promise<boolean> => {
 //> -----------------------------------------------------------------
 //> Fn:createUser() — Desc: Create a new user
 //> -----------------------------------------------------------------
-export const create = async (userData: CreateUserInput) => {
+export const create = async (userData: CreateUserInput): Promise<IUser> => {
 	// Info: Create a new user in the database with the provided user data
-	return User.create(userData);
+	const user = await User.create(userData);
+
+	// Info: Return the created user as a plain JavaScript object
+	return user.toObject();
 };

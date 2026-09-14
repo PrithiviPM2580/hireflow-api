@@ -2,11 +2,12 @@
 //! 🧱 Verification Model — Schema for verification model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 import { hashValue } from "@/utils/bcrypt.util";
 
 // Info: Interface for the verification model
-export interface IVerification extends Document {
+export interface IVerification {
+	_id: Types.ObjectId;
 	userId: Types.ObjectId;
 	tokenHash: string;
 	expiresAt: Date;
@@ -58,7 +59,7 @@ const verificationSchema = new Schema<IVerification>(
 verificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 // Info: Pre-save hook to hash the token before saving it to the database
-verificationSchema.pre<IVerification>("save", async function () {
+verificationSchema.pre("save", async function () {
 	if (!this.isModified("tokenHash")) return;
 
 	this.tokenHash = await hashValue(this.tokenHash);

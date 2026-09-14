@@ -46,6 +46,7 @@ export const register = async (
 		passwordHash: password,
 	});
 
+	// Info: Generate a new ObjectId for the verification record
 	const verificationId = generateMongooseObjectId();
 
 	// Info: Sign an email verification token for the newly created user

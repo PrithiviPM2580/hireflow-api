@@ -2,14 +2,15 @@
 //! 🧱 User Model — Schema for user model
 //! ============================================================
 
-import mongoose, { type Document, Schema } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 import { compareValue, hashValue } from "@/utils/bcrypt.util";
 
 // Info: Information about the user role
 export type UserRole = "CANDIDATE" | "RECRUITER" | "ADMIN";
 
 // Info: Interface for the user model
-export interface IUser extends Document {
+export interface IUser {
+	_id: Types.ObjectId;
 	name: string;
 	email: string;
 	passwordHash: string;
@@ -88,7 +89,7 @@ const userSchema = new Schema<IUser>(
 //-- ------------------------------------------------------
 //--  Pre Save : Hash the password before saving the user document
 //-- ------------------------------------------------------
-userSchema.pre<IUser>("save", async function () {
+userSchema.pre("save", async function () {
 	if (!this.isModified("passwordHash")) return;
 	this.passwordHash = await hashValue(this.passwordHash);
 });

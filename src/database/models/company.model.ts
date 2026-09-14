@@ -2,10 +2,11 @@
 //! 🧱 Company Model — Schema for company model
 //! ============================================================
 
-import mongoose, { type Document, Schema } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Interface for company model
-export interface ICompany extends Document {
+export interface ICompany {
+	_id: Types.ObjectId;
 	name: string;
 	description?: string;
 	website?: string;

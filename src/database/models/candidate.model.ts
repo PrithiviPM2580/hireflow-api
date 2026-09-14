@@ -2,7 +2,7 @@
 //! 🧱 Candidate Model — Scchema for candidate model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Interface for experience subdocument
 interface IExperience {
@@ -23,7 +23,8 @@ interface IEducation {
 }
 
 // Info: Interface for candidate model
-export interface ICandidate extends Document {
+export interface ICandidate {
+	_id: Types.ObjectId;
 	userId: Types.ObjectId;
 	bio?: string;
 	phone?: string;

@@ -2,7 +2,7 @@
 //! 🧱 Interview Model — Schema for interview model
 //! ============================================================
 
-import mongoose, { type Document, Schema, type Types } from "mongoose";
+import mongoose, { Schema, type Types } from "mongoose";
 
 // Info: Information about the interview status
 export type InterviewStatus =
@@ -12,7 +12,8 @@ export type InterviewStatus =
 	| "CANCELLED";
 
 // Info: Interface for the interview model
-export interface IInterview extends Document {
+export interface IInterview {
+	_id: Types.ObjectId;
 	applicationId: Types.ObjectId;
 
 	candidateId: Types.ObjectId;
