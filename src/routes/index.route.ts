@@ -28,35 +28,31 @@ const router: Router = Router();
 // @access Public
 router.route("/").get((_req: Request, res: Response, next: NextFunction) => {
 	try {
-		// Info: Log the root route access with details
-		logger.info(
-			"Root route accessed",
-			{
-				appName: appConfig.APP_NAME,
-				status: process.uptime() > 0 ? "Running" : "Stopped",
-				timestamp: new Date().toISOString(),
-				version: appConfig.APP_VERSION,
-				env: appConfig.NODE_ENV,
-			},
-			{ label: "RootRoute" },
-		);
-
-		// Info: Send a success response indicating the API is running
-		sendResponse(res, status.OK, "Hireflow API is running successfully", {
+		const responseData = {
 			appName: appConfig.APP_NAME,
 			status: process.uptime() > 0 ? "Running" : "Stopped",
 			timestamp: new Date().toISOString(),
 			version: appConfig.APP_VERSION,
 			env: appConfig.NODE_ENV,
+		};
+
+		// Info: Log the root route access
+		logger.info("Root route accessed", responseData, {
+			label: "RootRoute",
+		});
+
+		// Info: Send success response
+		return sendResponse(res, {
+			statusCode: status.OK,
+			message: "Hireflow API is running successfully",
+			data: responseData,
 		});
 	} catch (error) {
-		// Error: Log any errors that occur while accessing the root route
 		logger.error("Error in the root route", {
 			label: "RootRoute",
 			error,
 		});
 
-		// Error: Pass the error to the next middleware for handling
 		next(error);
 	}
 });
@@ -65,7 +61,7 @@ router.route("/").get((_req: Request, res: Response, next: NextFunction) => {
 //--  Health Route
 //-- ------------------------------------------------------
 // @desc Health Check
-// @route GET health
+// @route GET /health
 // @access Public
 router
 	.route("/health")
@@ -75,24 +71,30 @@ router
 			const dbState =
 				mongoose.connection.readyState === 1 ? "Connected" : "Disconnected";
 
-			// Info: Send a standardized response indicating the health status of the application, including database connection state, uptime, memory usage, and timestamp
-			sendResponse(res, 200, "Health check successful", {
+			const healthData = {
 				status: "ok",
 				service: appConfig.APP_NAME,
 				environment: appConfig.NODE_ENV,
 				database: dbState,
 				uptime: process.uptime(),
-				memoryusage: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+				memoryUsage: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
+					2,
+				)} MB`,
 				timestamp: new Date().toISOString(),
+			};
+
+			// Info: Send health response
+			return sendResponse(res, {
+				statusCode: status.OK,
+				message: "Health check successful",
+				data: healthData,
 			});
 		} catch (error) {
-			// ERROR: Error handling for health route, logging the error details for debugging and monitoring purposes
 			logger.error("Error in health route", {
 				label: "Health Route",
 				error,
 			});
 
-			// Error: Pass the error to the next middleware for handling
 			next(error);
 		}
 	});
@@ -100,6 +102,6 @@ router
 //-- ------------------------------------------------------
 //--  Auth Route
 //-- ------------------------------------------------------
-router.use(`${appConfig.BASE_PATH}/auth`, authRouter);
+router.use("/api/v1/auth", authRouter);
 
 export default router;

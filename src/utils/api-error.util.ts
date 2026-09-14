@@ -8,7 +8,6 @@ import { ERROR_CODE, type ErrorCode } from "@/constants/error-code.constant";
 //@ -----------------------------------------------------------------
 //@ Class:ApiError — Desc: Custom error class for API errors
 //@ -----------------------------------------------------------------
-
 export class ApiError extends Error {
 	// Info: Properties of the ApiError class
 	public readonly statusCode: number;
