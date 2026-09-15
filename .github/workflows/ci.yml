@@ -32,7 +32,7 @@ jobs:
         run: bun run check
 
       - name: Run Tests
-        run: bun test
+        run: bun run test --run
 
       - name: Build Project
         run: bun run build
