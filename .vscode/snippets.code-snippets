@@ -503,6 +503,16 @@
 		],
 		"description": "Insert a standard subsection header"
 	},
+	"Describe Header": {
+		"prefix": "describeheader",
+		"body": [
+			"//~ -----------------------------------------------------------------",
+			"//~ Spec:${1:testName} — Desc: ${2:Description}",
+			"//~ -----------------------------------------------------------------",
+			"$0"
+		],
+		"description": "Insert a standard describe test header"
+	},
 	"Function Header": {
 		"prefix": "fnheader",
 		"body": [
@@ -598,6 +608,56 @@
 		"prefix": "warn",
 		"body": ["// WARN: ${1:Description}"],
 		"description": "Insert a warning comment"
+	},
+	"Spec Comment": {
+		"prefix": "spec",
+		"body": ["// SPEC: ${1:Description}"],
+		"description": "Insert a SPEC comment"
+	},
+	"Arrange Comment": {
+		"prefix": "arrange",
+		"body": ["// ARRANGE: ${1:Description}"],
+		"description": "Insert an ARRANGE comment"
+	},
+	"Mock Comment": {
+		"prefix": "mock",
+		"body": ["// MOCK: ${1:Description}"],
+		"description": "Insert a MOCK comment"
+	},
+	"Setup Comment": {
+		"prefix": "setup",
+		"body": ["// SETUP: ${1:Description}"],
+		"description": "Insert a SETUP comment"
+	},
+	"Act Comment": {
+		"prefix": "act",
+		"body": ["// ACT: ${1:Description}"],
+		"description": "Insert an ACT comment"
+	},
+	"Assert Comment": {
+		"prefix": "assert",
+		"body": ["// ASSERT: ${1:Description}"],
+		"description": "Insert an ASSERT comment"
+	},
+	"Cleanup Comment": {
+		"prefix": "cleanup",
+		"body": ["// CLEANUP: ${1:Description}"],
+		"description": "Insert a CLEANUP comment"
+	},
+	"Edge Comment": {
+		"prefix": "edge",
+		"body": ["// EDGE: ${1:Description}"],
+		"description": "Insert an EDGE comment"
+	},
+	"Data Comment": {
+		"prefix": "data",
+		"body": ["// DATA: ${1:Description}"],
+		"description": "Insert a DATA comment"
+	},
+	"Skip Comment": {
+		"prefix": "skip",
+		"body": ["// SKIP: ${1:Description}"],
+		"description": "Insert a SKIP comment"
 	},
 	"Inline Comment": {
 		"prefix": "inline",

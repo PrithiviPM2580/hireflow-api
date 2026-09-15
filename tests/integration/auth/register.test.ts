@@ -50,9 +50,11 @@ describe("POST /api/v1/auth/register", () => {
 			message: "User created successfully",
 		});
 		expect(response.body.data).toMatchObject({
-			name: "John Doe",
-			email: "john@example.com",
-			isVerified: false,
+			user: {
+				name: "John Doe",
+				email: "john@example.com",
+				isVerified: false,
+			},
 		});
 
 		const user = await User.findOne({ email: "john@example.com" }).lean();

@@ -4,7 +4,7 @@
 
 import { Router } from "express";
 import * as authController from "./auth.controller";
-import { registerValidator } from "./auth.validator";
+import { registerValidator, verifyEmailValidator } from "./auth.validator";
 
 //-- ------------------------------------------------------
 //--  AuthRouter instance
@@ -12,5 +12,9 @@ import { registerValidator } from "./auth.validator";
 const authRouter: Router = Router();
 
 authRouter.route("/register").post(registerValidator, authController.register);
+
+authRouter
+	.route("/verify-email")
+	.get(verifyEmailValidator, authController.verifyEmail);
 
 export default authRouter;
