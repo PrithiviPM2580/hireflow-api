@@ -5,6 +5,7 @@
 import { OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import { openApiRegistry } from "./openapi.registry";
 import "@/modules/auth/auth.openapi";
+import "@/routes/index.openapi";
 
 //@ -----------------------------------------------------------------
 //@ Obj:openapiDocument — Desc: Generate the OpenAPI document
