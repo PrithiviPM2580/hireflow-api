@@ -5,17 +5,24 @@
 import ms, { type StringValue } from "ms";
 import { appConfig } from "@/config/app.config";
 import { sendEmail } from "@/config/resend.config";
+import * as sessionRepository from "@/modules/session/session.repository";
 import * as verificationRepository from "@/modules/verification/verification.repository";
 import { ApiError } from "@/utils/api-error.util";
 import { verificationEmailTemplate } from "@/utils/email-template.util";
 import { generateMongooseObjectId } from "@/utils/index.util";
 import {
+	signAccessToken,
 	signEmailVerificationToken,
+	signRefreshToken,
 	verifyEmailVerificationToken,
 } from "@/utils/jwt.util";
 import logger from "@/utils/logger.util";
 import * as authRepository from "./auth.repository";
-import type { RegisterInput, VerifyEmailQuery } from "./auth.schema";
+import type {
+	LoginInput,
+	RegisterInput,
+	VerifyEmailQuery,
+} from "./auth.schema";
 
 //> -----------------------------------------------------------------
 //> Fn:register() — Desc: Register a new user service
@@ -91,7 +98,7 @@ export const register = async (userData: RegisterInput["body"]) => {
 };
 
 //> -----------------------------------------------------------------
-//> Fn:verifyEmail() — Desc: Verify the email of a user
+//> Fn:verifyEmail() — Desc: Verify the email of a user service
 //> -----------------------------------------------------------------
 export const verifyEmail = async (query: VerifyEmailQuery["query"]) => {
 	// Info: Destructure the verification token from the query parameters
@@ -178,5 +185,90 @@ export const verifyEmail = async (query: VerifyEmailQuery["query"]) => {
 	return {
 		user,
 		verification,
+	};
+};
+
+//> -----------------------------------------------------------------
+//> Fn:login() — Desc: Login a user service
+//> -----------------------------------------------------------------
+export const login = async (userData: LoginInput["body"]) => {
+	// Info: Destructure the email and password from the user data
+	const { email, password } = userData;
+
+	// Info: Find the user by their email address
+	const user = await authRepository.findByEmail(email);
+
+	// Info: If the user is not found, log an error and throw a not found error
+	if (!user) {
+		// Error: Log the error indicating that the user was not found
+		logger.error("User not found", {
+			label: "AuthService",
+			email,
+		});
+		// Error: Throw a not found error indicating that the user was not found
+		throw ApiError.notFound("User not found");
+	}
+
+	// Info: If the user's email is not verified, log an error and throw an unauthorized error
+	if (!user.isVerified) {
+		// Error: Log the error indicating that the user's email is not verified
+		logger.error("User email is not verified", {
+			label: "AuthService",
+			email,
+		});
+		// Error: Throw an unauthorized error indicating that the user's email is not verified
+		throw ApiError.unauthorized("User email is not verified");
+	}
+
+	// Info: If the user's account is not active, log an error and throw an unauthorized error
+	const isPasswordValid = await user.comparePassword(password);
+
+	// Info: If the password is invalid, log an error and throw an unauthorized error
+	if (!isPasswordValid) {
+		// Error: Log the error indicating that the password is invalid
+		logger.error("Invalid password", {
+			label: "AuthService",
+			email,
+		});
+		// Error: Throw an unauthorized error indicating that the password is invalid
+		throw ApiError.unauthorized("Invalid password");
+	}
+
+	// Info: Generate a new ObjectId for the session
+	const sessionId = generateMongooseObjectId();
+
+	// Info: Sign an access token for the user with the session ID
+	const accessToken = signAccessToken({
+		userId: user._id.toString(),
+		sessionId: sessionId.toString(),
+		type: "access",
+	});
+
+	// Info: Sign a refresh token for the user with the session ID
+	const refreshToken = signRefreshToken({
+		userId: user._id.toString(),
+		sessionId: sessionId.toString(),
+		type: "refresh",
+	});
+
+	// Info: Calculate the expiration date for the refresh token
+	const expiresAt = new Date(
+		Date.now() + ms(appConfig.JWT_REFRESH_EXPIRES_IN as StringValue),
+	);
+
+	// Info: Create a new session record in the database for the user
+	const session = await sessionRepository.create({
+		_id: sessionId,
+		userId: user._id,
+		tokenHash: refreshToken,
+		expiresAt,
+	});
+
+	// Info: Return the user, session, access token, and refresh token
+	return {
+		user,
+		session,
+		accessToken,
+		refreshToken,
 	};
 };

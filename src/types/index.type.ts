@@ -3,7 +3,10 @@
 //! ============================================================
 
 import type { TypedRequestHandler } from "zod-express-validator";
-// Info: Generic type for controller
+
+//@ -----------------------------------------------------------------
+//@ Interface - Defines the interface
+//@ -----------------------------------------------------------------
 export type Controller<T> = TypedRequestHandler<T>;
 
 export interface AuthContext {
@@ -19,7 +22,7 @@ export type TokenType =
 
 export interface AccessTokenPayload {
 	userId: string;
-	sessionId?: string;
+	sessionId: string;
 	type: "access";
 }
 
@@ -40,3 +43,7 @@ export interface PasswordResetTokenPayload {
 	resetId: string;
 	type: "password_reset";
 }
+
+//@ -----------------------------------------------------------------
+//@ Type — Defines the type
+//@ -----------------------------------------------------------------

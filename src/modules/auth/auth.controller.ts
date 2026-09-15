@@ -5,7 +5,11 @@
 import { asyncHandler } from "@/middlewares/async-handler.middleware";
 import type { Controller } from "@/types/index.type";
 import { sendResponse } from "@/utils/send-response.util";
-import type { registerSchema, verifyEmailSchema } from "./auth.schema";
+import type {
+	loginSchema,
+	registerSchema,
+	verifyEmailSchema,
+} from "./auth.schema";
 import * as authService from "./auth.service";
 
 //> -----------------------------------------------------------------
@@ -43,6 +47,29 @@ export const verifyEmail: Controller<typeof verifyEmailSchema> = asyncHandler(
 			data: {
 				user,
 				verification,
+			},
+		});
+	},
+);
+
+//> -----------------------------------------------------------------
+//> Fn:login() — Desc: Login a user
+//> -----------------------------------------------------------------
+export const login: Controller<typeof loginSchema> = asyncHandler(
+	async (req, res) => {
+		// Info: Call the authService.login function to authenticate the user and generate tokens
+		const { user, session, accessToken, refreshToken } =
+			await authService.login(req.body);
+
+		// Info: Send a success response with the user data and tokens
+		sendResponse(res, {
+			statusCode: 200,
+			message: "Login successful",
+			data: {
+				user,
+				session,
+				accessToken,
+				refreshToken,
 			},
 		});
 	},
