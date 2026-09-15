@@ -9,12 +9,15 @@ import { sendEmail } from "@/config/resend.config";
 import type { IUser } from "@/database/models/user.model";
 import type { IVerification } from "@/database/models/verification.model";
 import * as authRepository from "@/modules/auth/auth.repository";
-import { register, verifyEmail } from "@/modules/auth/auth.service";
+import { login, register, verifyEmail } from "@/modules/auth/auth.service";
+import * as sessionRepository from "@/modules/session/session.repository";
 import * as verificationRepository from "@/modules/verification/verification.repository";
 import type { EmailVerificationTokenPayload } from "@/schema/token-payload.schema";
 import { generateMongooseObjectId } from "@/utils/index.util";
 import {
+	signAccessToken,
 	signEmailVerificationToken,
+	signRefreshToken,
 	verifyEmailVerificationToken,
 } from "@/utils/jwt.util";
 
@@ -23,6 +26,7 @@ vi.mock("@/config/app.config", () => ({
 	appConfig: {
 		APP_ORIGIN: "http://localhost:3000",
 		JWT_EMAIL_VERIFICATION_EXPIRES_IN: "30m",
+		JWT_REFRESH_EXPIRES_IN: "7d",
 	},
 }));
 
@@ -31,6 +35,7 @@ vi.mock("@/modules/auth/auth.repository", () => ({
 	isUserExist: vi.fn(),
 	create: vi.fn(),
 	findById: vi.fn(),
+	findByEmail: vi.fn(),
 }));
 
 // Mock: Mock the verification repository
@@ -40,6 +45,10 @@ vi.mock("@/modules/verification/verification.repository", () => ({
 	deleteById: vi.fn(),
 }));
 
+vi.mock("@/modules/session/session.repository", () => ({
+	create: vi.fn(),
+}));
+
 // Mock: Mock the sendEmail function from the resend.config module
 vi.mock("@/config/resend.config", () => ({
 	sendEmail: vi.fn(),
@@ -47,6 +56,8 @@ vi.mock("@/config/resend.config", () => ({
 
 // Mock: Mock the signEmailVerificationToken function from the jwt.util module
 vi.mock("@/utils/jwt.util", () => ({
+	signAccessToken: vi.fn(),
+	signRefreshToken: vi.fn(),
 	signEmailVerificationToken: vi.fn(),
 	verifyEmailVerificationToken: vi.fn(),
 }));
@@ -58,7 +69,7 @@ vi.mock("@/utils/index.util", () => ({
 }));
 
 //~ -----------------------------------------------------------------
-//~ Spec:Auth Service  — Desc: Test cases for the auth service
+//~ Spec:Auth Service - register  — Desc: Test cases for the auth service
 //~ ----------------------------------------------------------------------
 describe("Auth Service - register", () => {
 	// Setup: Clear all mocks before each test case
@@ -519,5 +530,109 @@ describe("Auth Service - verifyEmail", () => {
 
 		// Assert: Assert that the findById function of the auth repository was called with the expected user ID
 		expect(authRepository.findById).toHaveBeenCalledWith(userId.toString());
+	});
+});
+
+//~ -----------------------------------------------------------------
+//~ Spec:Auth Service - login — Desc: Test case for user login
+//~ -----------------------------------------------------------------
+describe("Auth Service - login", () => {
+	// Setup: Clear all mocks before each test case
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	// Test: Test case for successful user login with valid credentials
+	it("should login successfully with valid credentials", async () => {
+		// Arrange: Sample user data for login
+		const userId = new Types.ObjectId();
+		const sessionId = new Types.ObjectId();
+
+		// Data: Sample user data for login
+		const userData = {
+			email: "john@example.com",
+			password: "Password123!",
+		};
+		const accessToken = "access-token";
+		const refreshToken = "refresh-token";
+
+		// Arrange: Mock user and session objects to be returned by the repository functions
+		const user = {
+			_id: userId,
+			email: userData.email,
+			name: "John Doe",
+			passwordHash: "hashed-password",
+			role: "CANDIDATE",
+			isVerified: true,
+			isActive: true,
+			failedLoginAttempts: 0,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			comparePassword: vi.fn().mockResolvedValue(true),
+			save: vi.fn().mockResolvedValue(undefined),
+		} as unknown as Awaited<ReturnType<typeof authRepository.findByEmail>>;
+
+		// Arrange: Mock session object to be returned by the session repository's create function
+		const session = {
+			_id: sessionId,
+			userId: userId,
+			tokenHash: refreshToken,
+			expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+		} as unknown as Awaited<ReturnType<typeof sessionRepository.create>>;
+
+		// Mock: Mock the repository functions to return the mock user and session objects
+		vi.mocked(authRepository.findByEmail).mockResolvedValue(user);
+
+		// Mock: Mock the comparePassword function of the user object to return true, indicating that the provided password matches the stored password hash
+		vi.mocked(generateMongooseObjectId).mockReturnValue(sessionId);
+
+		// Mock: Mock the signAccessToken and signRefreshToken functions to return sample access and refresh tokens
+		vi.mocked(signAccessToken).mockReturnValue(accessToken);
+
+		// Mock: Mock the signRefreshToken function to return a sample refresh token
+		vi.mocked(signRefreshToken).mockReturnValue(refreshToken);
+
+		// Mock: Mock the create function of the session repository to return the mock session object
+		vi.mocked(sessionRepository.create).mockResolvedValue(session);
+
+		// Act: Call the login function with the sample user data and store the result
+		const result = await login(userData);
+
+		// Assert: Assert that the service returns the user, session, access token, and refresh token
+		expect(result).toEqual({
+			user,
+			session,
+			accessToken,
+			refreshToken,
+		});
+
+		// Assert: Assert that the repository functions were called with the expected arguments
+		expect(authRepository.findByEmail).toHaveBeenCalledWith(userData.email);
+
+		// Assert: Assert that the comparePassword function of the user object was called with the provided password
+		expect(user?.comparePassword).toHaveBeenCalledWith(userData.password);
+
+		// Assert: Assert that the generateMongooseObjectId function was called to generate a new session ID
+		expect(signAccessToken).toHaveBeenCalledWith({
+			userId: userId.toString(),
+			sessionId: sessionId.toString(),
+			type: "access",
+		});
+
+		// Assert: Assert that the signRefreshToken function was called with the expected arguments
+		expect(signRefreshToken).toHaveBeenCalledWith({
+			userId: userId.toString(),
+			sessionId: sessionId.toString(),
+			type: "refresh",
+		});
+
+		// Assert: Assert that the create function of the session repository was called with the expected session data
+		expect(sessionRepository.create).toHaveBeenCalledWith(
+			expect.objectContaining({
+				_id: sessionId,
+				userId,
+				tokenHash: refreshToken,
+			}),
+		);
 	});
 });

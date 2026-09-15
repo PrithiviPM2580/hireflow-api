@@ -4,7 +4,11 @@
 
 import { Router } from "express";
 import * as authController from "./auth.controller";
-import { registerValidator, verifyEmailValidator } from "./auth.validator";
+import {
+	loginValidator,
+	registerValidator,
+	verifyEmailValidator,
+} from "./auth.validator";
 
 //-- ------------------------------------------------------
 //--  AuthRouter instance
@@ -16,5 +20,7 @@ authRouter.route("/register").post(registerValidator, authController.register);
 authRouter
 	.route("/verify-email")
 	.get(verifyEmailValidator, authController.verifyEmail);
+
+authRouter.route("/login").post(loginValidator, authController.login);
 
 export default authRouter;

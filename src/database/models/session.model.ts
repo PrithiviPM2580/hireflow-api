@@ -3,6 +3,7 @@
 //! ============================================================
 
 import mongoose, { Schema, type Types } from "mongoose";
+import { hashValue } from "@/utils/bcrypt.util";
 
 // Info: Interface for session model
 export interface ISession {
@@ -46,6 +47,15 @@ const sessionSchema = new Schema<ISession>(
 		},
 	},
 );
+
+//-- ------------------------------------------------------
+//--  Pre Save : Hash the token before saving the user document
+//-- ------------------------------------------------------
+sessionSchema.pre("save", async function () {
+	if (!this.isModified("tokenHash")) return;
+
+	this.tokenHash = await hashValue(this.tokenHash);
+});
 
 // Info: Index to automatically delete expired sessions after their expiration time
 const Session = mongoose.model<ISession>("Session", sessionSchema);
