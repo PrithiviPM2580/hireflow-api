@@ -1,4 +1,5 @@
 @baseUrl= http://localhost:3000/api/v1
+@token= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWE4ZDllOTgyYTM5NjIxYWExMzIzMjkiLCJ0eXBlIjoiZW1haWxfdmVyaWZpY2F0aW9uIiwidmVyaWZpY2F0aW9uSWQiOiI2YWE4ZDllOTgyYTM5NjIxYWExMzIzMmEiLCJpYXQiOjE3ODk0NTA3MjksImV4cCI6MTc4OTQ1MjUyOSwiYXVkIjoidXNlciIsImlzcyI6ImhpcmVmbG93In0.LwzagTri1PZbcDWoIEqlAPoM2jLSxCkOfZM_CLn6oVk
 
 
 ### Register a new user
@@ -10,3 +11,6 @@ Content-Type: application/json
     "email":"prithivimagar2580@gmail.com",
     "password":"password123"
 }
+
+### Verify email
+GET {{baseUrl}}/auth/verify-email?token={{token}}

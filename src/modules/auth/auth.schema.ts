@@ -27,7 +27,17 @@ export const loginSchema = {
 };
 
 //@ -----------------------------------------------------------------
+//@ Obj:verifyEmailSchema — Desc: Verify the email of a user
+//@ -----------------------------------------------------------------
+export const verifyEmailSchema = {
+	query: z.object({
+		token: z.string().min(1, "Verification token is required"),
+	}),
+};
+
+//@ -----------------------------------------------------------------
 //@ Type:InferType — Desc: Infer the given schema type
 //@ -----------------------------------------------------------------
 export type RegisterInput = InferSchemas<typeof registerSchema>;
 export type LoginInput = InferSchemas<typeof loginSchema>;
+export type VerifyEmailQuery = InferSchemas<typeof verifyEmailSchema>;

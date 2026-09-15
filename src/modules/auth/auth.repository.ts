@@ -8,7 +8,7 @@ import type { CreateUserInput } from "./auth.types";
 //> -----------------------------------------------------------------
 //> Fn:isUserExist() — Desc: Check if a user exists by email
 //> -----------------------------------------------------------------
-export const isUserExist = async (email: string): Promise<boolean> => {
+export const isUserExist = async (email: string) => {
 	// Info: Check if a user exists by email
 	return Boolean(await User.exists({ email }));
 };
@@ -18,8 +18,21 @@ export const isUserExist = async (email: string): Promise<boolean> => {
 //> -----------------------------------------------------------------
 export const create = async (userData: CreateUserInput): Promise<IUser> => {
 	// Info: Create a new user in the database with the provided user data
-	const user = await User.create(userData);
+	return (await User.create(userData)).toObject();
+};
 
-	// Info: Return the created user as a plain JavaScript object
-	return user.toObject();
+//> -----------------------------------------------------------------
+//> Fn:findById() — Desc: Find a user by their ID
+//> -----------------------------------------------------------------
+export const findById = async (userId: string) => {
+	// Info: Find a user by their ID
+	return await User.findById(userId);
+};
+
+//> -----------------------------------------------------------------
+//> Fn:findByEmail() — Desc: Find a user by their email
+//> -----------------------------------------------------------------
+export const findByEmail = async (email: string) => {
+	// Info: Find a user by their email
+	return await User.findOne({ email });
 };

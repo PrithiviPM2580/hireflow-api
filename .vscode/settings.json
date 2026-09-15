@@ -224,6 +224,42 @@
 			"italic": false
 		},
 		{
+			"tag": "test",
+			"color": "#569CD6",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "arrange",
+			"color": "#C586C0",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "act",
+			"color": "#DCDCAA",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "assert",
+			"color": "#00C853",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
 			"tag": "!",
 			"color": "#2ECC71",
 			"strikethrough": false,
@@ -275,6 +311,69 @@
 			"underline": false,
 			"backgroundColor": "transparent",
 			"bold": true,
+			"italic": false
+		},
+		{
+			"tag": "~",
+			"color": "#C586C0",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": true,
+			"italic": false
+		},
+		{
+			"tag": "mock",
+			"color": "#56B6C2",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "setup",
+			"color": "#4EC9B0",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "cleanup",
+			"color": "#D19A66",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "edge",
+			"color": "#E06C75",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "data",
+			"color": "#61AFEF",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "skip",
+			"color": "#808080",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
 			"italic": false
 		}
 	]
