@@ -2,6 +2,7 @@
 //! 🚀 App — Application setup and configuration
 //! ============================================================
 import "@/openapi/zod-openapi";
+import cookieParser from "cookie-parser";
 import express, { type Express } from "express";
 import helmet from "helmet";
 import hpp from "hpp-clean";
@@ -27,6 +28,7 @@ app.use(cors); // Enable CORS
 app.use(sanitize()); // Sanitize request data to prevent NoSQL injection and XSS attacks
 app.use(express.json()); // Parse incoming JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse incoming URL-encoded requests
+app.use(cookieParser()); // Parse authentication cookies
 app.use(morgan.successLoggerMiddleware); // Log successful requests
 app.use(morgan.errorLoggerMiddleware); // Log error requests
 app.use(compressResponse); // Compress response bodies for all requests

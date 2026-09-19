@@ -4,6 +4,8 @@
 
 import { asyncHandler } from "@/middlewares/async-handler.middleware";
 import type { Controller } from "@/types/index.type";
+import { ApiError } from "@/utils/api-error.util";
+import { setAuthenticationCookies } from "@/utils/cookie.util";
 import { sendResponse } from "@/utils/send-response.util";
 import type {
 	loginSchema,
@@ -61,6 +63,12 @@ export const login: Controller<typeof loginSchema> = asyncHandler(
 		const { user, session, accessToken, refreshToken } =
 			await authService.login(req.body);
 
+		setAuthenticationCookies({
+			res,
+			accessToken,
+			refreshToken,
+		});
+
 		// Info: Send a success response with the user data and tokens
 		sendResponse(res, {
 			statusCode: 200,
@@ -70,6 +78,37 @@ export const login: Controller<typeof loginSchema> = asyncHandler(
 				session,
 				accessToken,
 				refreshToken,
+			},
+		});
+	},
+);
+
+//> -----------------------------------------------------------------
+//> Fn:refresh() — Desc: Refresh the access token
+//> -----------------------------------------------------------------
+export const refresh: Controller<Record<never, never>> = asyncHandler(
+	async (req, res) => {
+		const refreshToken = req.cookies?.refresh_token;
+
+		if (!refreshToken) {
+			throw ApiError.unauthorized("Refresh token is required");
+		}
+
+		const { accessToken, refreshToken: newRefreshToken } =
+			await authService.refresh(refreshToken);
+
+		setAuthenticationCookies({
+			res,
+			accessToken,
+			refreshToken: newRefreshToken,
+		});
+
+		sendResponse(res, {
+			statusCode: 200,
+			message: "Token refreshed successfully",
+			data: {
+				accessToken,
+				refreshToken: newRefreshToken,
 			},
 		});
 	},

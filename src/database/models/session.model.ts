@@ -3,7 +3,7 @@
 //! ============================================================
 
 import mongoose, { Schema, type Types } from "mongoose";
-import { hashValue } from "@/utils/bcrypt.util";
+import { compareValue, hashValue } from "@/utils/bcrypt.util";
 
 // Info: Interface for session model
 export interface ISession {
@@ -13,6 +13,8 @@ export interface ISession {
 	expiresAt: Date;
 	revokedAt?: Date;
 	createdAt: Date;
+
+	compareToken: (token: string) => Promise<boolean>;
 }
 
 //@ -----------------------------------------------------------------
@@ -56,6 +58,15 @@ sessionSchema.pre("save", async function () {
 
 	this.tokenHash = await hashValue(this.tokenHash);
 });
+
+//-- ------------------------------------------------------
+//--  Instance Method : Compare the provided token with the hashed token
+//-- ------------------------------------------------------
+sessionSchema.methods.compareToken = async function (
+	token: string,
+): Promise<boolean> {
+	return await compareValue(token, this.tokenHash);
+};
 
 // Info: Index to automatically delete expired sessions after their expiration time
 const Session = mongoose.model<ISession>("Session", sessionSchema);
