@@ -9,16 +9,25 @@ import { sendEmail } from "@/config/resend.config";
 import type { IUser } from "@/database/models/user.model";
 import type { IVerification } from "@/database/models/verification.model";
 import * as authRepository from "@/modules/auth/auth.repository";
-import { login, register, verifyEmail } from "@/modules/auth/auth.service";
+import {
+	login,
+	refresh,
+	register,
+	verifyEmail,
+} from "@/modules/auth/auth.service";
 import * as sessionRepository from "@/modules/session/session.repository";
 import * as verificationRepository from "@/modules/verification/verification.repository";
-import type { EmailVerificationTokenPayload } from "@/schema/token-payload.schema";
+import type {
+	EmailVerificationTokenPayload,
+	RefreshTokenPayload,
+} from "@/schema/token-payload.schema";
 import { generateMongooseObjectId } from "@/utils/index.util";
 import {
 	signAccessToken,
 	signEmailVerificationToken,
 	signRefreshToken,
 	verifyEmailVerificationToken,
+	verifyRefreshToken,
 } from "@/utils/jwt.util";
 
 // Mock: Mock the appConfig module to provide a mock configuration for testing
@@ -45,8 +54,10 @@ vi.mock("@/modules/verification/verification.repository", () => ({
 	deleteById: vi.fn(),
 }));
 
+// Mock: Mock the session repository
 vi.mock("@/modules/session/session.repository", () => ({
 	create: vi.fn(),
+	findById: vi.fn(),
 }));
 
 // Mock: Mock the sendEmail function from the resend.config module
@@ -60,6 +71,7 @@ vi.mock("@/utils/jwt.util", () => ({
 	signRefreshToken: vi.fn(),
 	signEmailVerificationToken: vi.fn(),
 	verifyEmailVerificationToken: vi.fn(),
+	verifyRefreshToken: vi.fn(),
 }));
 
 // Mock: Mock the generateMongooseObjectId function from the index.util module
@@ -634,5 +646,70 @@ describe("Auth Service - login", () => {
 				tokenHash: refreshToken,
 			}),
 		);
+	});
+});
+
+//~ -----------------------------------------------------------------
+//~ Spec:Auth Service - refresh — Desc: Test cases for refresh tokens
+//~ -----------------------------------------------------------------
+describe("Auth Service - refresh", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it("should rotate the refresh token and return a new access token", async () => {
+		const userId = new Types.ObjectId();
+		const sessionId = new Types.ObjectId();
+		const refreshToken = "refresh-token";
+		const newRefreshToken = "rotated-refresh-token";
+
+		const payload: RefreshTokenPayload = {
+			userId: userId.toString(),
+			sessionId: sessionId.toString(),
+			type: "refresh",
+		};
+		const session = {
+			_id: sessionId,
+			userId,
+			tokenHash: "hashed-refresh-token",
+			expiresAt: new Date(Date.now() + 60_000),
+			revokedAt: null,
+			compareToken: vi.fn().mockResolvedValue(true),
+			save: vi.fn().mockResolvedValue(undefined),
+		} as unknown as Awaited<ReturnType<typeof sessionRepository.findById>>;
+		const user = {
+			_id: userId,
+			isActive: true,
+			isVerified: true,
+		} as unknown as Awaited<ReturnType<typeof authRepository.findById>>;
+
+		vi.mocked(verifyRefreshToken).mockReturnValue(payload);
+		vi.mocked(sessionRepository.findById).mockResolvedValue(session);
+		vi.mocked(authRepository.findById).mockResolvedValue(user);
+		vi.mocked(signRefreshToken).mockReturnValue(newRefreshToken);
+		vi.mocked(signAccessToken).mockReturnValue("new-access-token");
+
+		const result = await refresh(refreshToken);
+
+		expect(result).toEqual({
+			accessToken: "new-access-token",
+			refreshToken: newRefreshToken,
+		});
+		expect(verifyRefreshToken).toHaveBeenCalledWith(refreshToken);
+		expect(session.compareToken).toHaveBeenCalledWith(refreshToken);
+		expect(session.tokenHash).toBe(newRefreshToken);
+		expect(session.save).toHaveBeenCalledOnce();
+	});
+
+	it("should reject an invalid refresh token", async () => {
+		const error = new Error("Invalid token");
+		vi.mocked(verifyRefreshToken).mockImplementation(() => {
+			throw error;
+		});
+
+		await expect(refresh("invalid-refresh-token")).rejects.toThrow(
+			"Invalid token",
+		);
+		expect(sessionRepository.findById).not.toHaveBeenCalled();
 	});
 });

@@ -14,3 +14,8 @@ export const create = async (
 	// Info: Create a new session document in the database and return it as a plain JavaScript object
 	return (await Session.create(sessionData)).toObject();
 };
+
+export const findById = async (sessionId: string) => {
+	// Info: Find a session document by its ID in the database
+	return await Session.findById(sessionId);
+};

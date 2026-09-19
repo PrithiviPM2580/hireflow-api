@@ -2,6 +2,7 @@
 //! 📝 Types — Type definitions
 //! ============================================================
 
+import type { Response } from "express";
 import type { TypedRequestHandler } from "zod-express-validator";
 
 //@ -----------------------------------------------------------------
@@ -42,6 +43,12 @@ export interface PasswordResetTokenPayload {
 	userId: string;
 	resetId: string;
 	type: "password_reset";
+}
+
+export interface AuthenticationCookiesPayload {
+	res: Response;
+	accessToken: string;
+	refreshToken: string;
 }
 
 //@ -----------------------------------------------------------------

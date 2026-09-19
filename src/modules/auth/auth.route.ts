@@ -23,4 +23,6 @@ authRouter
 
 authRouter.route("/login").post(loginValidator, authController.login);
 
+authRouter.route("/refresh").post(authController.refresh);
+
 export default authRouter;

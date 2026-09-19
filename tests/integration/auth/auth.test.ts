@@ -44,6 +44,7 @@ vi.mock("@/utils/jwt.util", () => ({
 	verifyEmailVerificationToken: vi.fn(),
 	signAccessToken: vi.fn().mockReturnValue("test-access-token"),
 	signRefreshToken: vi.fn().mockReturnValue("test-refresh-token"),
+	verifyRefreshToken: vi.fn(),
 }));
 
 //~ -----------------------------------------------------------------
@@ -247,5 +248,74 @@ describe("POST /api/v1/auth/login", () => {
 		expect(
 			await compareValue("test-refresh-token", session?.tokenHash ?? ""),
 		).toBe(true);
+	});
+});
+
+//~ -----------------------------------------------------------------
+//~ Spec: POST /api/v1/auth/refresh — Desc: Test refresh-token rotation
+//~ -----------------------------------------------------------------
+describe("POST /api/v1/auth/refresh", () => {
+	it("refreshes the session and rotates the refresh cookie", async () => {
+		const user = await User.create({
+			name: "John Doe",
+			email: "john@example.com",
+			passwordHash: "Password123!",
+			isVerified: true,
+		});
+
+		const loginResponse = await request(app).post("/api/v1/auth/login").send({
+			email: "john@example.com",
+			password: "Password123!",
+		});
+
+		expect(loginResponse.status).toBe(200);
+
+		const session = await Session.findOne({ userId: user._id });
+		expect(session).not.toBeNull();
+
+		const { signRefreshToken, verifyRefreshToken } = await import(
+			"@/utils/jwt.util"
+		);
+		vi.mocked(signRefreshToken).mockReturnValue("rotated-refresh-token");
+		vi.mocked(verifyRefreshToken).mockReturnValue({
+			userId: user._id.toString(),
+			sessionId: session?._id.toString() ?? "",
+			type: "refresh",
+		});
+
+		const refreshResponse = await request(app)
+			.post("/api/v1/auth/refresh")
+			.set("Cookie", loginResponse.headers["set-cookie"]);
+
+		expect(refreshResponse.status).toBe(200);
+		expect(refreshResponse.body).toMatchObject({
+			success: true,
+			message: "Token refreshed successfully",
+			data: {
+				accessToken: "test-access-token",
+				refreshToken: "rotated-refresh-token",
+			},
+		});
+
+		const updatedSession = await Session.findById(session?._id);
+		expect(updatedSession).not.toBeNull();
+		expect(
+			await compareValue(
+				"rotated-refresh-token",
+				updatedSession?.tokenHash ?? "",
+			),
+		).toBe(true);
+		expect(
+			await compareValue("test-refresh-token", updatedSession?.tokenHash ?? ""),
+		).toBe(false);
+	});
+
+	it("rejects the request when the refresh cookie is missing", async () => {
+		const response = await request(app).post("/api/v1/auth/refresh");
+
+		expect(response.status).toBe(401);
+		expect(response.body).toMatchObject({
+			message: "Refresh token is required",
+		});
 	});
 });
