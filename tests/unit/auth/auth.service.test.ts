@@ -653,21 +653,29 @@ describe("Auth Service - login", () => {
 //~ Spec:Auth Service - refresh — Desc: Test cases for refresh tokens
 //~ -----------------------------------------------------------------
 describe("Auth Service - refresh", () => {
+	// Setup: Clear all mocks before each test case
 	beforeEach(() => {
 		vi.clearAllMocks();
 	});
 
+	// Test: Test case for successful refresh token rotation and access token generation
 	it("should rotate the refresh token and return a new access token", async () => {
+		// Arrange: Sample data for refresh token rotation
 		const userId = new Types.ObjectId();
 		const sessionId = new Types.ObjectId();
+
+		// Data: Sample refresh token and new refresh token for rotation
 		const refreshToken = "refresh-token";
 		const newRefreshToken = "rotated-refresh-token";
 
+		// Arrange: Mock the payload returned by the verifyRefreshToken function
 		const payload: RefreshTokenPayload = {
 			userId: userId.toString(),
 			sessionId: sessionId.toString(),
 			type: "refresh",
 		};
+
+		// Arrange: Mock session and user objects to be returned by the repository functions
 		const session = {
 			_id: sessionId,
 			userId,
@@ -677,39 +685,72 @@ describe("Auth Service - refresh", () => {
 			compareToken: vi.fn().mockResolvedValue(true),
 			save: vi.fn().mockResolvedValue(undefined),
 		} as unknown as Awaited<ReturnType<typeof sessionRepository.findById>>;
+
+		// Arrange: Mock user object to be returned by the auth repository's findById function
 		const user = {
 			_id: userId,
 			isActive: true,
 			isVerified: true,
 		} as unknown as Awaited<ReturnType<typeof authRepository.findById>>;
 
+		// Mock: Mock the repository functions to return the mock session and user objects
 		vi.mocked(verifyRefreshToken).mockReturnValue(payload);
+
+		// Mock: Mock the findById functions of the session and auth repositories to return the mock session and user objects
 		vi.mocked(sessionRepository.findById).mockResolvedValue(session);
+
+		// Mock: Mock the findById function of the auth repository to return the mock user object
 		vi.mocked(authRepository.findById).mockResolvedValue(user);
+
+		// Mock: Mock the signRefreshToken and signAccessToken functions to return new tokens for rotation
 		vi.mocked(signRefreshToken).mockReturnValue(newRefreshToken);
+
+		// Mock: Mock the signAccessToken function to return a new access token
 		vi.mocked(signAccessToken).mockReturnValue("new-access-token");
 
+		// Act: Call the refresh function with the sample refresh token and store the result
 		const result = await refresh(refreshToken);
 
+		// Assert: Assert that the service returns the new access token and new refresh token
+		if (!session) {
+			throw new Error("Expected a session mock");
+		}
+
+		// Assert: Assert that the result contains the new access token and new refresh token
 		expect(result).toEqual({
 			accessToken: "new-access-token",
 			refreshToken: newRefreshToken,
 		});
+
+		// Assert: Assert that the repository functions were called with the expected arguments
 		expect(verifyRefreshToken).toHaveBeenCalledWith(refreshToken);
+
+		// Assert: Assert that the findById function of the session repository was called with the expected session ID
 		expect(session.compareToken).toHaveBeenCalledWith(refreshToken);
+
+		// Assert: Assert that the findById function of the auth repository was called with the expected user ID
 		expect(session.tokenHash).toBe(newRefreshToken);
+
+		// Assert: Assert that the save method of the session object was called to persist the updated session
 		expect(session.save).toHaveBeenCalledOnce();
 	});
 
+	// Test: Test case for refresh token rotation when the provided refresh token is invalid
 	it("should reject an invalid refresh token", async () => {
+		// Arrange: Mock the verifyRefreshToken function to throw an error for an invalid refresh token
 		const error = new Error("Invalid token");
+
+		// Mock: Mock the verifyRefreshToken function to throw an error for an invalid refresh token
 		vi.mocked(verifyRefreshToken).mockImplementation(() => {
 			throw error;
 		});
 
+		// Act & Assert: Call the refresh function with an invalid refresh token and assert that it throws an error indicating that the token is invalid
 		await expect(refresh("invalid-refresh-token")).rejects.toThrow(
 			"Invalid token",
 		);
+
+		// Assert: Assert that the repository functions were not called since the refresh token is invalid
 		expect(sessionRepository.findById).not.toHaveBeenCalled();
 	});
 });

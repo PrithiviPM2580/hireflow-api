@@ -255,7 +255,9 @@ describe("POST /api/v1/auth/login", () => {
 //~ Spec: POST /api/v1/auth/refresh — Desc: Test refresh-token rotation
 //~ -----------------------------------------------------------------
 describe("POST /api/v1/auth/refresh", () => {
+	// Test: Refresh the session and rotate the refresh cookie
 	it("refreshes the session and rotates the refresh cookie", async () => {
+		// Arrange: Create a verified user in the database
 		const user = await User.create({
 			name: "John Doe",
 			email: "john@example.com",
@@ -263,31 +265,54 @@ describe("POST /api/v1/auth/refresh", () => {
 			isVerified: true,
 		});
 
+		// Arrange: Log in the user to obtain the refresh cookie
 		const loginResponse = await request(app).post("/api/v1/auth/login").send({
 			email: "john@example.com",
 			password: "Password123!",
 		});
 
+		// Assert: Verify the login response status and obtain the refresh cookie
 		expect(loginResponse.status).toBe(200);
 
+		// Assert: Verify that the login response includes the refresh cookie
+		const refreshCookie = loginResponse.headers["set-cookie"];
+
+		// Assert: Verify that the refresh cookie is present in the login response
+		if (!refreshCookie) {
+			// Error: Throw an error if the refresh cookie is missing in the login response
+			throw new Error("Login response did not include authentication cookies");
+		}
+
+		// Act: Send a POST request to the refresh endpoint with the refresh cookie
 		const session = await Session.findOne({ userId: user._id });
+
+		// Assert: Verify that the session is not null and has the expected properties
 		expect(session).not.toBeNull();
 
+		// Mock: Mock the signRefreshToken and verifyRefreshToken functions to simulate token rotation
 		const { signRefreshToken, verifyRefreshToken } = await import(
 			"@/utils/jwt.util"
 		);
+
+		// Mock: Mock the signRefreshToken function to return a new rotated refresh token
 		vi.mocked(signRefreshToken).mockReturnValue("rotated-refresh-token");
+
+		// Mock: Mock the verifyRefreshToken function to return a valid payload for the refresh token
 		vi.mocked(verifyRefreshToken).mockReturnValue({
 			userId: user._id.toString(),
 			sessionId: session?._id.toString() ?? "",
 			type: "refresh",
 		});
 
+		// Act: Send a POST request to the refresh endpoint with the refresh cookie
 		const refreshResponse = await request(app)
 			.post("/api/v1/auth/refresh")
-			.set("Cookie", loginResponse.headers["set-cookie"]);
+			.set("Cookie", refreshCookie);
 
+		// Assert: Verify the refresh response status and body
 		expect(refreshResponse.status).toBe(200);
+
+		// Assert: Verify the refresh response body contains the expected success message and new tokens
 		expect(refreshResponse.body).toMatchObject({
 			success: true,
 			message: "Token refreshed successfully",
@@ -297,23 +322,35 @@ describe("POST /api/v1/auth/refresh", () => {
 			},
 		});
 
+		// Assert: Verify that the session's tokenHash is updated to the new rotated refresh token
 		const updatedSession = await Session.findById(session?._id);
+
+		// Assert: Verify that the updated session is not null and has the expected properties
 		expect(updatedSession).not.toBeNull();
+
+		// Assert: Verify that the updated session's tokenHash matches the hashed value of the new rotated refresh token and does not match the old refresh token
 		expect(
 			await compareValue(
 				"rotated-refresh-token",
 				updatedSession?.tokenHash ?? "",
 			),
 		).toBe(true);
+
+		// Assert: Verify that the updated session's tokenHash does not match the old refresh token
 		expect(
 			await compareValue("test-refresh-token", updatedSession?.tokenHash ?? ""),
 		).toBe(false);
 	});
 
+	// Test: Reject the request when the refresh cookie is missing
 	it("rejects the request when the refresh cookie is missing", async () => {
+		// Act: Send a POST request to the refresh endpoint without the refresh cookie
 		const response = await request(app).post("/api/v1/auth/refresh");
 
+		// Assert: Verify the response status and body
 		expect(response.status).toBe(401);
+
+		// Assert: Verify the response body contains the expected error message
 		expect(response.body).toMatchObject({
 			message: "Refresh token is required",
 		});
